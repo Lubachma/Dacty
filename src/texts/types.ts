@@ -1,5 +1,18 @@
-export type Language = 'fr' | 'en';
+export type Language = 'fr' | 'en' | 'c' | 'python';
 export type TextLength = 'short' | 'medium' | 'long';
+
+export const CODE_LANGUAGES: readonly Language[] = ['c', 'python'];
+
+export function isCodeLanguage(language: Language): boolean {
+  return CODE_LANGUAGES.includes(language);
+}
+
+export const LANGUAGE_LABELS: Record<Language, string> = {
+  fr: 'Français',
+  en: 'English',
+  c: 'C',
+  python: 'Python',
+};
 
 export interface TextEntry {
   id: string;

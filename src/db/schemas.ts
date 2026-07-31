@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const languageSchema = z.enum(['fr', 'en']);
+export const languageSchema = z.enum(['fr', 'en', 'c', 'python']);
 const tierSchema = z.enum(['bronze', 'argent', 'or', 'platine', 'diamant', 'challenger']);
 
 export const profileSchema = z.object({
