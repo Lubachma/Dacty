@@ -35,7 +35,7 @@ export function TypingArea({ state, disabled = false, onChar, onBackspace }: Typ
       ref={containerRef}
       data-testid="typing-area"
       onClick={() => inputRef.current?.focus()}
-      className="relative cursor-text rounded-xl border border-line bg-surface p-6 font-type text-xl leading-relaxed break-words backdrop-blur select-none"
+      className="relative cursor-text rounded-xl border border-line bg-surface p-6 font-type text-xl leading-relaxed break-words whitespace-pre-wrap backdrop-blur select-none"
     >
       <input
         ref={inputRef}
@@ -55,6 +55,11 @@ export function TypingArea({ state, disabled = false, onChar, onBackspace }: Typ
           if (e.key === 'Backspace') {
             e.preventDefault();
             onBackspace();
+            return;
+          }
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            onChar('\n');
             return;
           }
           if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
@@ -83,7 +88,7 @@ export function TypingArea({ state, disabled = false, onChar, onBackspace }: Typ
                 : 'text-muted'
           }
         >
-          {ch}
+          {ch === '\n' ? '↵\n' : ch}
         </span>
       ))}
     </div>

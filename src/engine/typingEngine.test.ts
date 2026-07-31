@@ -65,6 +65,15 @@ describe('typingEngine', () => {
     expect(pressBackspace(s, 1000)).toBe(s);
   });
 
+  it('accepte le caractère nouvelle ligne comme tout autre caractère', () => {
+    let s = createRun('a\nb');
+    s = typeChar(s, 'a', 1000);
+    s = typeChar(s, '\n', 1100);
+    expect(s.statuses).toEqual(['correct', 'correct', 'pending']);
+    s = typeChar(s, 'b', 1200);
+    expect(isFinished(s)).toBe(true);
+  });
+
   it('enregistre les événements de frappe', () => {
     let s = createRun('ab');
     s = typeChar(s, 'a', 1000);

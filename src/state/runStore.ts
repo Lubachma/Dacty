@@ -36,7 +36,14 @@ export const useRunStore = create<RunStore>((set, get) => ({
   key(char) {
     const { typing, config, status } = get();
     if (!typing || !config || status !== 'running') return;
-    const next = typeChar(typing, char, Date.now());
+    let next = typeChar(typing, char, Date.now());
+    if (next === typing) return;
+    // auto-indentation : après un saut de ligne correct, tape les espaces attendus
+    if (char === '\n' && next.statuses[next.cursor - 1] === 'correct') {
+      while (next.text[next.cursor] === ' ' && !isFinished(next)) {
+        next = typeChar(next, ' ', Date.now());
+      }
+    }
     if (isFinished(next)) {
       set({ typing: next, status: 'finished' });
       void completeRun(next, config, Date.now())
@@ -60,7 +67,7 @@ export const useRunStore = create<RunStore>((set, get) => ({
             kind: 'info',
           });
         });
-    } else if (next !== typing) {
+    } else {
       set({ typing: next });
     }
   },

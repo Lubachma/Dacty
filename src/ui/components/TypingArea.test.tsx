@@ -50,4 +50,19 @@ describe('TypingArea', () => {
     await userEvent.keyboard('a');
     expect(onChar).not.toHaveBeenCalled();
   });
+
+  it('la touche Entrée envoie un caractère nouvelle ligne', async () => {
+    const onChar = vi.fn();
+    render(<TypingArea state={createRun('a\nb')} onChar={onChar} onBackspace={() => {}} />);
+    screen.getByLabelText('Zone de saisie').focus();
+    await userEvent.keyboard('{Enter}');
+    expect(onChar).toHaveBeenCalledWith('\n');
+  });
+
+  it('affiche un marqueur pour les sauts de ligne', () => {
+    render(<TypingArea state={createRun('a\nb')} onChar={() => {}} onBackspace={() => {}} />);
+    const chars = screen.getByTestId('typing-area').querySelectorAll('[data-char]');
+    expect(chars).toHaveLength(3);
+    expect(chars[1].textContent).toBe('↵\n');
+  });
 });

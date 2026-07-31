@@ -42,4 +42,24 @@ describe('runStore', () => {
     useRunStore.getState().key('b');
     expect(useRunStore.getState().status).toBe('invalidated');
   });
+
+  it('auto-indente les espaces après un saut de ligne correct', () => {
+    useRunStore.getState().start(config, 'a\n    b');
+    useRunStore.getState().key('a');
+    useRunStore.getState().key('\n');
+    // le curseur a sauté les 4 espaces d'indentation automatiquement
+    expect(useRunStore.getState().typing?.cursor).toBe(6);
+    expect(useRunStore.getState().typing?.statuses.slice(0, 6)).toEqual(
+      ['correct', 'correct', 'correct', 'correct', 'correct', 'correct'],
+    );
+  });
+
+  it("n'auto-indente pas après un saut de ligne incorrect", () => {
+    useRunStore.getState().start(config, 'ab\n  c');
+    useRunStore.getState().key('\n'); // attendu: 'a' -> erreur, pas d'indentation
+    const typing = useRunStore.getState().typing;
+    expect(typing?.statuses[0]).toBe('incorrect');
+    expect(typing?.cursor).toBe(1);
+    expect(typing?.statuses[1]).toBe('pending');
+  });
 });
