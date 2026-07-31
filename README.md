@@ -38,7 +38,7 @@ Vite + React 19 + TypeScript strict, Tailwind CSS v4, Framer Motion, Zustand, De
 ## Structure
 
 - `src/engine/` — machine à états de frappe + stats (pur, testé)
-- `src/texts/` — corpus fr/en (JSON) + normalisation des toggles
+- `src/texts/` — corpus fr/en + code C/Python (JSON) + normalisation des toggles
 - `src/scoring/` — points Challenger + tiers de ligue
 - `src/db/` — Dexie : runs, profil, succès, progression Challenger
 - `src/achievements/` — 28 succès déclaratifs + moteur de déblocage
