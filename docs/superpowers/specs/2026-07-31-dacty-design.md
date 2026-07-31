@@ -38,7 +38,8 @@ Routes :
 |---|---|
 | `/` | Accueil — accès rapide aux modes, dernières perfs |
 | `/play` | Entraînement libre (options : langue, longueur, toggles) |
-| `/challenger` | Mode Challenger (ranked par langue) |
+| `/dev` | Mode Dev — taper du code (C, Python) : extraits, fonctions, programmes |
+| `/challenger` | Mode Challenger (ranked par langue et par langage dev) |
 | `/leaderboard` | Classements locaux |
 | `/achievements` | Succès avec progression |
 | `/stats` | Profil & statistiques (graphes WPM/précision dans le temps) |
@@ -59,7 +60,7 @@ Routes :
 
 - Langue : **FR / EN** (extensible).
 - Longueur : court (~150 car.) / moyen (~400 car.) / long (~800 car.) / citation aléatoire.
-- Toggles de difficulté : **ponctuation, caractères spéciaux (`&@#%€...`), chiffres, accents**. Désactivé = texte normalisé (`é→e`, suppression de la ponctuation, etc.).
+- Toggles de difficulté : **ponctuation, caractères spéciaux (`&@#%€...`), chiffres, accents**. Désactivé = texte normalisé (`é→e`, suppression de la ponctuation, etc.). Les toggles ne s'appliquent qu'aux textes de prose (fr/en) — en mode Dev le code est toujours tapé brut.
 
 ### 4.3 Scoring
 
@@ -69,26 +70,37 @@ Routes :
 
 ### 4.4 Mode Challenger (ranked par langue)
 
-- Chaque langue a un **set officiel de 10 textes fixes**, à difficulté progressive.
+- Chaque langue de prose (fr, en) **et chaque langage dev (c, python)** a un **set officiel de 10 textes fixes**, à difficulté progressive.
 - Runs Challenger **obligatoirement avec tous les toggles actifs** (conditions officielles).
 - Seul le **meilleur score par texte** compte ; le total des 10 textes = points de ligue.
 - **Tiers** (points de ligue = total des meilleurs scores sur les 10 textes officiels) : Bronze ≥ 100, Argent ≥ 400, Or ≥ 750, Platine ≥ 950, Diamant ≥ 1 100, Challenger ≥ 1 300.
 - Calibration (tous toggles actifs → multiplicateur ×1,4) : 60 WPM / 97 % ≈ 79 pts/texte → ~790 total (Or) ; 100 WPM / 99 % ≈ 137 pts/texte → ~1 370 (Challenger).
 - Classement local par langue + historique des changements de tier.
 
-### 4.5 Achievements (~25 à la v1)
+### 4.5 Achievements (28 à la v1)
 
-- **Vitesse** : 40 / 60 / 80 / 100 / 120 WPM sur une run.
-- **Précision** : run à 100 % ; 10 runs à ≥ 98 %.
-- **Volume** : 10 / 50 / 100 / 500 runs ; 100 000 caractères tapés.
-- **Challenger** : atteindre Bronze (entrer dans la ligue) ; Or / Diamant / Challenger dans une langue ; les deux langues en Or+.
-- **Fun** : run sans backspace ; run à 3 h du matin ; 7 jours d'affilée.
+- **Vitesse** : 40 / 60 / 80 / 100 / 120 / 140 WPM sur une run.
+- **Précision** : run à 100 % ; 10 runs à ≥ 98 % ; 50 runs à ≥ 98 %.
+- **Volume** : 10 / 50 / 100 / 500 runs ; 100 000 puis 1 000 000 caractères tapés.
+- **Challenger** : atteindre Bronze (entrer dans la ligue) ; Or / Diamant / Challenger dans une langue ou un langage ; fr ET en en Or+.
+- **Dev** : première run dev (« Hello, World! ») ; 10 runs dev ; run dev ≥ 100 car. à 100 %.
+- **Fun** : run sans backspace ; run à 3 h du matin ; 7 jours d'affilée ; run ≥ 800 car. ; une run fr et une run en le même jour.
 - Déblocage = toast animé + page achievements avec progression (ex. « 37/50 runs »).
 
 ### 4.6 Classements
 
 - Par **langue × texte × mode** (libre/challenger) : top 10 local + rang du joueur.
 - Records personnels : meilleur WPM, meilleure précision, plus longue run.
+
+### 4.7 Mode Dev
+
+- Page `/dev` : taper du **code** le plus vite possible — extraits, fonctions, programmes complets. Aucune compétence en code requise (c'est de la frappe), mais l'exposition au code peut en apprendre les bases.
+- Langages à la v1 : **C** et **Python** (extensibles).
+- Longueurs : **Extrait** (3-6 lignes), **Fonction** (~10-20 lignes), **Programme** (complet, ~25-50 lignes).
+- Texte multi-lignes : `Entrée` tape le caractère `\n` ; **auto-indentation** : après un saut de ligne correct, les espaces d'indentation attendus sont insérés automatiquement (comme un éditeur).
+- Pas de toggles : le code est toujours tapé brut ; multiplicateur de points fixe ×1,4 (équivalent conditions officielles).
+- **Challenger** : chaque langage a sa propre ligue (10 programmes officiels, mêmes formules et seuils de tiers que les langues).
+- Corpus par langage : **15 extraits libres** (5 par longueur) + **10 officiels**. Indentation en espaces uniquement, jamais de tabulation ni d'espace en fin de ligne.
 
 ## 5. Données
 
@@ -99,7 +111,7 @@ IndexedDB (Dexie) :
 - `achievements` : id, date de déblocage (les règles vivent dans le code).
 - `challenger` : par langue — meilleurs points par texte officiel, total, tier actuel, historique des tiers.
 
-Les **textes** sont des JSON versionnés dans le bundle (`texts/fr/*.json`, `texts/en/*.json`), chaque texte a un **id stable** (`fr-001`) reliant runs et records. Corpus v1, par langue : **30 textes libres** (10 courts / 12 moyens / 8 longs) + **10 textes officiels Challenger** (difficulté progressive).
+Les **textes** sont des JSON versionnés dans le bundle (`texts/{fr,en,c,python}.json`), chaque texte a un **id stable** (`fr-001`, `c-101`…) reliant runs et records. Corpus v1 : par langue de prose (fr/en), **30 textes libres** (10 courts / 12 moyens / 8 longs, une seule ligne) + **10 textes officiels Challenger** ; par langage dev (c/python), **15 extraits libres** (5 par longueur, multi-lignes) + **10 officiels**.
 
 **Flow d'une run :** sélection texte → engine (état en mémoire via Zustand) → fin de run → scoring → écriture DB (run + records + succès + points Challenger le cas échéant) → écran résultats. Rien n'est persisté pendant la frappe.
 
@@ -121,5 +133,5 @@ Les **textes** sont des JSON versionnés dans le bundle (`texts/fr/*.json`, `tex
 
 - Mode en ligne / multijoueur / comptes (prévu plus tard — l'architecture web le permet).
 - Contre-la-montre (30 s/60 s) : la v1 est speedrun sur texte fixe uniquement.
-- Langues autres que FR/EN.
+- Langues autres que FR/EN ; langages de programmation autres que C et Python.
 - App desktop / mobile native.
