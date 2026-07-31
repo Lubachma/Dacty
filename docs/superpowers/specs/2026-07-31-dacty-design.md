@@ -72,7 +72,8 @@ Routes :
 - Chaque langue a un **set officiel de 10 textes fixes**, à difficulté progressive.
 - Runs Challenger **obligatoirement avec tous les toggles actifs** (conditions officielles).
 - Seul le **meilleur score par texte** compte ; le total des 10 textes = points de ligue.
-- **Tiers** : Bronze → Argent → Or → Platine → Diamant → Challenger, seuils calibrés (Or ≈ joueur 60 WPM propre ; Challenger ≈ 100+ WPM quasi parfait).
+- **Tiers** (points de ligue = total des meilleurs scores sur les 10 textes officiels) : Bronze ≥ 100, Argent ≥ 400, Or ≥ 750, Platine ≥ 950, Diamant ≥ 1 100, Challenger ≥ 1 300.
+- Calibration (tous toggles actifs → multiplicateur ×1,4) : 60 WPM / 97 % ≈ 79 pts/texte → ~790 total (Or) ; 100 WPM / 99 % ≈ 137 pts/texte → ~1 370 (Challenger).
 - Classement local par langue + historique des changements de tier.
 
 ### 4.5 Achievements (~25 à la v1)
@@ -80,7 +81,7 @@ Routes :
 - **Vitesse** : 40 / 60 / 80 / 100 / 120 WPM sur une run.
 - **Précision** : run à 100 % ; 10 runs à ≥ 98 %.
 - **Volume** : 10 / 50 / 100 / 500 runs ; 100 000 caractères tapés.
-- **Challenger** : premier tier ; Or / Diamant / Challenger dans une langue ; les deux langues en Or+.
+- **Challenger** : atteindre Bronze (entrer dans la ligue) ; Or / Diamant / Challenger dans une langue ; les deux langues en Or+.
 - **Fun** : run sans backspace ; run à 3 h du matin ; 7 jours d'affilée.
 - Déblocage = toast animé + page achievements avec progression (ex. « 37/50 runs »).
 
@@ -98,7 +99,7 @@ IndexedDB (Dexie) :
 - `achievements` : id, date de déblocage (les règles vivent dans le code).
 - `challenger` : par langue — meilleurs points par texte officiel, total, tier actuel, historique des tiers.
 
-Les **textes** sont des JSON versionnés dans le bundle (`texts/fr/*.json`, `texts/en/*.json`), chaque texte a un **id stable** (`fr-001`) reliant runs et records.
+Les **textes** sont des JSON versionnés dans le bundle (`texts/fr/*.json`, `texts/en/*.json`), chaque texte a un **id stable** (`fr-001`) reliant runs et records. Corpus v1, par langue : **30 textes libres** (10 courts / 12 moyens / 8 longs) + **10 textes officiels Challenger** (difficulté progressive).
 
 **Flow d'une run :** sélection texte → engine (état en mémoire via Zustand) → fin de run → scoring → écriture DB (run + records + succès + points Challenger le cas échéant) → écran résultats. Rien n'est persisté pendant la frappe.
 
