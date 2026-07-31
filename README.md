@@ -19,8 +19,9 @@ npm run dev        # http://localhost:5173
 ## Modes de jeu
 
 - **Entraînement libre** (`/play`) : texte au choix (français/anglais, court/moyen/long/citation) avec toggles de difficulté (ponctuation, caractères spéciaux, chiffres, accents).
-- **Challenger** (`/challenger`) : la ranked. 10 textes officiels par langue, tous les toggles forcés. Points = `WPM × précision² × 1,4`. Total des meilleurs scores → tiers : Bronze (100) → Argent (400) → Or (750) → Platine (950) → Diamant (1100) → Challenger (1300).
-- **Succès** (`/achievements`) : 25 succès en 5 catégories.
+- **Mode Dev** (`/dev`) : tape du code C ou Python (extraits, fonctions, programmes complets). Code toujours brut, multiplicateur ×1,4 ; Entrée valide les sauts de ligne et l'indentation est automatique.
+- **Challenger** (`/challenger`) : la ranked. 10 textes officiels par langue (français, anglais) **et par langage (C, Python)**, conditions officielles. Points = `WPM × précision² × 1,4`. Total des meilleurs scores → tiers : Bronze (100) → Argent (400) → Or (750) → Platine (950) → Diamant (1100) → Challenger (1300).
+- **Succès** (`/achievements`) : 28 succès en 6 catégories.
 - **Classements** (`/leaderboard`) : top 10 local par mode/langue/texte + records personnels.
 - **Stats** (`/stats`) : WPM et précision moyens sur 30 jours, séries de jeu.
 
