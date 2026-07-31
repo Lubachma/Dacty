@@ -7,7 +7,13 @@ import { checkPersistence } from '@/db/persistence';
 export function Layout() {
   const [persistent, setPersistent] = useState(true);
   useEffect(() => {
-    void checkPersistence().then(setPersistent);
+    let active = true;
+    void checkPersistence().then((ok) => {
+      if (active) setPersistent(ok);
+    });
+    return () => {
+      active = false;
+    };
   }, []);
   return (
     <div className="min-h-screen">
