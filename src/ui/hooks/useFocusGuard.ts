@@ -15,6 +15,7 @@ export function useFocusGuard(): void {
     const { pause, resume, invalidate } = useRunStore.getState();
     const onBlur = () => {
       pause();
+      if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(invalidate, timeoutSec * 1000);
     };
     const onFocus = () => {

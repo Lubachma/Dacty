@@ -34,6 +34,15 @@ describe('TypingArea', () => {
     expect(notPrevented).toBe(false);
   });
 
+  it('capture les caractères composés via l\'événement input', () => {
+    const onChar = vi.fn();
+    render(<TypingArea state={createRun('ê')} onChar={onChar} onBackspace={() => {}} />);
+    const input = screen.getByLabelText('Zone de saisie') as HTMLInputElement;
+    fireEvent.change(input, { target: { value: 'ê' } });
+    expect(onChar).toHaveBeenCalledWith('ê');
+    expect(input.value).toBe('');
+  });
+
   it('ignore les frappes quand disabled', async () => {
     const onChar = vi.fn();
     render(<TypingArea state={createRun('ab')} disabled onChar={onChar} onBackspace={() => {}} />);

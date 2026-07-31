@@ -42,8 +42,14 @@ export function TypingArea({ state, disabled = false, onChar, onBackspace }: Typ
         aria-label="Zone de saisie"
         className="absolute h-1 w-1 opacity-0"
         autoFocus
-        value=""
-        onChange={() => undefined}
+        defaultValue=""
+        onChange={(e) => {
+          // caractères composés (touches mortes, IME) : non vus par onKeyDown
+          const v = e.target.value;
+          e.target.value = '';
+          if (disabled || v.length === 0) return;
+          onChar(v[v.length - 1]);
+        }}
         onKeyDown={(e) => {
           if (disabled) return;
           if (e.key === 'Backspace') {
