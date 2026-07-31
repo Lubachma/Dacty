@@ -23,13 +23,15 @@ export function computeStreak(dates: number[], now: number): number {
 }
 
 export async function buildContext(newRun: RunRecord): Promise<AchievementContext> {
-  const [runs, fr, en] = await Promise.all([allRuns(), getProgress('fr'), getProgress('en')]);
+  const [runs, fr, en, c, python] = await Promise.all([
+    allRuns(), getProgress('fr'), getProgress('en'), getProgress('c'), getProgress('python'),
+  ]);
   return {
     newRun,
     runs,
     totalChars: runs.reduce((sum, r) => sum + r.chars, 0),
     streakDays: computeStreak(runs.map((r) => r.date), Date.now()),
-    progress: { fr, en },
+    progress: { fr, en, c, python },
     now: Date.now(),
   };
 }

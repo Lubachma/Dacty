@@ -13,6 +13,7 @@ const CATEGORIES: { id: AchievementCategory; label: string }[] = [
   { id: 'precision', label: 'Précision' },
   { id: 'volume', label: 'Volume' },
   { id: 'challenger', label: 'Challenger' },
+  { id: 'dev', label: 'Dev' },
   { id: 'fun', label: 'Fun' },
 ];
 
@@ -61,8 +62,9 @@ export function AchievementsPage() {
 
   useEffect(() => {
     void (async () => {
-      const [runs, unlocks, fr, en] = await Promise.all([
-        allRuns(), db.achievements.toArray(), getProgress('fr'), getProgress('en'),
+      const [runs, unlocks, fr, en, c, python] = await Promise.all([
+        allRuns(), db.achievements.toArray(),
+        getProgress('fr'), getProgress('en'), getProgress('c'), getProgress('python'),
       ]);
       setUnlocked(new Map(unlocks.map((u) => [u.id, u.unlockedAt])));
       const sorted = runs.slice().sort((a, b) => a.date - b.date);
@@ -71,7 +73,7 @@ export function AchievementsPage() {
         runs,
         totalChars: runs.reduce((s, r) => s + r.chars, 0),
         streakDays: computeStreak(runs.map((r) => r.date), Date.now()),
-        progress: { fr, en },
+        progress: { fr, en, c, python },
         now: Date.now(),
       });
     })();

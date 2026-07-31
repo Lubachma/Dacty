@@ -13,7 +13,7 @@ import { ALL_OPTIONS_ON, applyOptions } from '@/texts/normalize';
 import { getProgress } from '@/db/challengerRepo';
 import type { ChallengerProgress } from '@/db/types';
 import { nextTier, TIER_THRESHOLDS } from '@/scoring/league';
-import type { Language } from '@/texts/types';
+import { LANGUAGE_LABELS, type Language } from '@/texts/types';
 
 const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' });
 
@@ -130,7 +130,7 @@ export function ChallengerPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Mode Challenger</h1>
         <div className="flex gap-2">
-          {(['fr', 'en'] as const).map((l) => (
+          {(['fr', 'en', 'c', 'python'] as const).map((l) => (
             <button
               key={l}
               type="button"
@@ -139,7 +139,7 @@ export function ChallengerPage() {
                 language === l ? 'border-accent bg-accent/15 text-text' : 'border-line text-muted'
               }`}
             >
-              {l === 'fr' ? 'Français' : 'English'}
+              {LANGUAGE_LABELS[l]}
             </button>
           ))}
         </div>

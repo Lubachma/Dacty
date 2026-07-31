@@ -21,7 +21,12 @@ function ctx(patch: Partial<AchievementContext>): AchievementContext {
   const r = run({});
   return {
     newRun: r, runs: [r], totalChars: 250, streakDays: 1,
-    progress: { fr: emptyProgress('fr'), en: emptyProgress('en') },
+    progress: {
+      fr: emptyProgress('fr'),
+      en: emptyProgress('en'),
+      c: emptyProgress('c'),
+      python: emptyProgress('python'),
+    },
     now: 1_000_000, ...patch,
   };
 }
@@ -33,9 +38,9 @@ const def = (id: string) => {
 };
 
 describe('definitions', () => {
-  it('contient 25 succès aux ids uniques', () => {
-    expect(ACHIEVEMENTS).toHaveLength(25);
-    expect(new Set(ACHIEVEMENTS.map((a) => a.id)).size).toBe(25);
+  it('contient 28 succès aux ids uniques', () => {
+    expect(ACHIEVEMENTS).toHaveLength(28);
+    expect(new Set(ACHIEVEMENTS.map((a) => a.id)).size).toBe(28);
   });
 
   it('wpm-60 se débloque à 60 WPM', () => {
@@ -65,9 +70,37 @@ describe('definitions', () => {
 
   it('gold-any et gold-both lisent les tiers des deux langues', () => {
     const gold = { ...emptyProgress('fr' as Language), tier: 'or' as const };
-    expect(def('gold-any').isUnlocked(ctx({ progress: { fr: gold, en: emptyProgress('en') } }))).toBe(true);
-    expect(def('gold-both').isUnlocked(ctx({ progress: { fr: gold, en: emptyProgress('en') } }))).toBe(false);
-    expect(def('gold-both').isUnlocked(ctx({ progress: { fr: gold, en: { ...gold, language: 'en' as Language } } }))).toBe(true);
+    const empty = { en: emptyProgress('en'), c: emptyProgress('c'), python: emptyProgress('python') };
+    expect(def('gold-any').isUnlocked(ctx({ progress: { fr: gold, ...empty } }))).toBe(true);
+    expect(def('gold-both').isUnlocked(ctx({ progress: { fr: gold, ...empty } }))).toBe(false);
+    expect(def('gold-both').isUnlocked(ctx({
+      progress: { fr: gold, en: { ...gold, language: 'en' as Language }, c: emptyProgress('c'), python: emptyProgress('python') },
+    }))).toBe(true);
+  });
+
+  it('hello-world se débloque sur une run en langage de code', () => {
+    expect(def('hello-world').isUnlocked(ctx({ newRun: run({ language: 'python' }) }))).toBe(true);
+    expect(def('hello-world').isUnlocked(ctx({ newRun: run({ language: 'fr' }) }))).toBe(false);
+  });
+
+  it('dev-10 compte les runs en langages de code', () => {
+    const runs = Array.from({ length: 9 }, () => run({ language: 'c' }));
+    expect(def('dev-10').isUnlocked(ctx({ runs }))).toBe(false);
+    expect(def('dev-10').isUnlocked(ctx({ runs: [...runs, run({ language: 'python' })] }))).toBe(true);
+    expect(def('dev-10').progress?.(ctx({ runs }))).toBe(9);
+  });
+
+  it('dev-perfect exige 100% sur une run code d\'au moins 100 caractères', () => {
+    expect(def('dev-perfect').isUnlocked(ctx({ newRun: run({ language: 'python', accuracy: 1, chars: 100 }) }))).toBe(true);
+    expect(def('dev-perfect').isUnlocked(ctx({ newRun: run({ language: 'en', accuracy: 1, chars: 100 }) }))).toBe(false);
+    expect(def('dev-perfect').isUnlocked(ctx({ newRun: run({ language: 'c', accuracy: 1, chars: 99 }) }))).toBe(false);
+  });
+
+  it('gold-any considère aussi les ligues de code', () => {
+    const goldC = { ...emptyProgress('c' as Language), tier: 'or' as const };
+    const progress = { fr: emptyProgress('fr'), en: emptyProgress('en'), c: goldC, python: emptyProgress('python') };
+    expect(def('gold-any').isUnlocked(ctx({ progress }))).toBe(true);
+    expect(def('gold-both').isUnlocked(ctx({ progress }))).toBe(false); // gold-both reste fr+en
   });
 
   it('no-backspace exige zéro backspace sur au moins 30 caractères', () => {

@@ -24,12 +24,15 @@ function LeagueMini({ label, progress }: { label: string; progress: ChallengerPr
 
 export function HomePage() {
   const pseudo = useSettings((s) => s.profile.pseudo);
-  const [progress, setProgress] = useState<Record<Language, ChallengerProgress | null>>({ fr: null, en: null });
+  const [progress, setProgress] = useState<Record<Language, ChallengerProgress | null>>({
+    fr: null, en: null, c: null, python: null,
+  });
   const [recent, setRecent] = useState<RunRecord[]>([]);
 
   useEffect(() => {
-    void getProgress('fr').then((p) => setProgress((s) => ({ ...s, fr: p })));
-    void getProgress('en').then((p) => setProgress((s) => ({ ...s, en: p })));
+    for (const lang of ['fr', 'en', 'c', 'python'] as const) {
+      void getProgress(lang).then((p) => setProgress((s) => ({ ...s, [lang]: p })));
+    }
     void allRuns().then((runs) =>
       setRecent(runs.sort((a, b) => b.date - a.date).slice(0, 5)),
     );
@@ -68,6 +71,8 @@ export function HomePage() {
       <section className="grid gap-3 sm:grid-cols-2">
         <LeagueMini label="Ligue française" progress={progress.fr} />
         <LeagueMini label="Ligue anglaise" progress={progress.en} />
+        <LeagueMini label="Ligue C" progress={progress.c} />
+        <LeagueMini label="Ligue Python" progress={progress.python} />
       </section>
 
       {recent.length > 0 && (

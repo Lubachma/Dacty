@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { personalBests, rankFor, topRuns } from '@/db/runsRepo';
 import type { GameMode, RunRecord } from '@/db/types';
 import { getOfficialTexts, getTexts } from '@/texts/corpus';
-import type { Language } from '@/texts/types';
+import { LANGUAGE_LABELS, type Language } from '@/texts/types';
 
 const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' });
 
@@ -80,7 +80,7 @@ export function LeaderboardPage() {
             {m === 'free' ? 'Libre' : 'Challenger'}
           </button>
         ))}
-        {(['fr', 'en'] as const).map((l) => (
+        {(['fr', 'en', 'c', 'python'] as const).map((l) => (
           <button
             key={l}
             type="button"
@@ -89,7 +89,7 @@ export function LeaderboardPage() {
               language === l ? 'border-accent bg-accent/15 text-text' : 'border-line text-muted'
             }`}
           >
-            {l === 'fr' ? 'Français' : 'English'}
+            {LANGUAGE_LABELS[l]}
           </button>
         ))}
         <select

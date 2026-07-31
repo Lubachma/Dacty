@@ -11,9 +11,9 @@ beforeEach(async () => {
 });
 
 describe('AchievementsPage', () => {
-  it('affiche les 25 succès et le compteur de déblocage', async () => {
+  it('affiche les 28 succès et le compteur de déblocage', async () => {
     render(<MemoryRouter><AchievementsPage /></MemoryRouter>);
-    expect(await screen.findByText('1 / 25')).toBeInTheDocument();
+    expect(await screen.findByText('1 / 28')).toBeInTheDocument();
     expect(screen.getByText('Échauffement')).toBeInTheDocument();
     expect(screen.getByText('Inhumain')).toBeInTheDocument();
     // « Challenger » apparaît deux fois : titre de section et succès « Challenger »

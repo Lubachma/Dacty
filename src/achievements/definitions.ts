@@ -1,6 +1,6 @@
 import type { ChallengerProgress, RunRecord } from '@/db/types';
 import { tierRank, type Tier } from '@/scoring/league';
-import type { Language } from '@/texts/types';
+import { isCodeLanguage, type Language } from '@/texts/types';
 
 export interface AchievementContext {
   newRun: RunRecord;
@@ -11,7 +11,7 @@ export interface AchievementContext {
   now: number;
 }
 
-export type AchievementCategory = 'vitesse' | 'precision' | 'volume' | 'challenger' | 'fun';
+export type AchievementCategory = 'vitesse' | 'precision' | 'volume' | 'challenger' | 'dev' | 'fun';
 
 export interface AchievementDef {
   id: string;
@@ -93,28 +93,46 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   },
   {
     id: 'enter-league', category: 'challenger', title: 'En lice',
-    description: 'Atteindre le tier Bronze dans une langue',
-    isUnlocked: (ctx) => ctx.progress.fr.tier !== null || ctx.progress.en.tier !== null,
+    description: 'Atteindre le tier Bronze dans une ligue',
+    isUnlocked: (ctx) => Object.values(ctx.progress).some((p) => p.tier !== null),
   },
   {
     id: 'gold-any', category: 'challenger', title: 'En or',
-    description: 'Atteindre le tier Or dans une langue',
-    isUnlocked: (ctx) => tierAtLeast(ctx.progress.fr, 'or') || tierAtLeast(ctx.progress.en, 'or'),
+    description: 'Atteindre le tier Or dans une ligue',
+    isUnlocked: (ctx) => Object.values(ctx.progress).some((p) => tierAtLeast(p, 'or')),
   },
   {
     id: 'diamond-any', category: 'challenger', title: 'Diamanté',
-    description: 'Atteindre le tier Diamant dans une langue',
-    isUnlocked: (ctx) => tierAtLeast(ctx.progress.fr, 'diamant') || tierAtLeast(ctx.progress.en, 'diamant'),
+    description: 'Atteindre le tier Diamant dans une ligue',
+    isUnlocked: (ctx) => Object.values(ctx.progress).some((p) => tierAtLeast(p, 'diamant')),
   },
   {
     id: 'challenger-any', category: 'challenger', title: 'Challenger',
-    description: 'Atteindre le tier Challenger dans une langue',
-    isUnlocked: (ctx) => tierAtLeast(ctx.progress.fr, 'challenger') || tierAtLeast(ctx.progress.en, 'challenger'),
+    description: 'Atteindre le tier Challenger dans une ligue',
+    isUnlocked: (ctx) => Object.values(ctx.progress).some((p) => tierAtLeast(p, 'challenger')),
   },
   {
     id: 'gold-both', category: 'challenger', title: 'Bilingue d\'or',
     description: 'Atteindre le tier Or en français ET en anglais',
     isUnlocked: (ctx) => tierAtLeast(ctx.progress.fr, 'or') && tierAtLeast(ctx.progress.en, 'or'),
+  },
+  {
+    id: 'hello-world', category: 'dev', title: 'Hello, World!',
+    description: 'Terminer une run en C ou Python',
+    isUnlocked: (ctx) => isCodeLanguage(ctx.newRun.language),
+  },
+  {
+    id: 'dev-10', category: 'dev', title: 'Apprenti programmeur',
+    description: 'Terminer 10 runs en langages de code',
+    target: 10,
+    isUnlocked: (ctx) => ctx.runs.filter((r) => isCodeLanguage(r.language)).length >= 10,
+    progress: (ctx) => ctx.runs.filter((r) => isCodeLanguage(r.language)).length,
+  },
+  {
+    id: 'dev-perfect', category: 'dev', title: 'Sans un warning',
+    description: 'Terminer une run dev d\'au moins 100 caractères à 100 % de précision',
+    isUnlocked: (ctx) =>
+      isCodeLanguage(ctx.newRun.language) && ctx.newRun.accuracy === 1 && ctx.newRun.chars >= 100,
   },
   {
     id: 'no-backspace', category: 'fun', title: 'Droit au but',
