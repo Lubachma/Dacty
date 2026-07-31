@@ -10,16 +10,21 @@ export interface DayStat {
 export function dailyAverages(runs: RunRecord[], days = 30, now = Date.now()): DayStat[] {
   const buckets = new Map<string, RunRecord[]>();
   const order: string[] = [];
+  const dayKey = (d: Date): string =>
+    `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+  const cursor = new Date(now);
   for (let i = days - 1; i >= 0; i--) {
-    const d = new Date(now - i * 86_400_000);
-    const key = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+    const d = new Date(cursor.getFullYear(), cursor.getMonth(), cursor.getDate() - i);
+    const key = dayKey(d);
     buckets.set(key, []);
     order.push(key);
   }
+  const oldest = new Date(cursor.getFullYear(), cursor.getMonth(), cursor.getDate() - (days - 1));
   for (const r of runs) {
     const d = new Date(r.date);
-    const key = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
-    if (buckets.has(key) && now - r.date < days * 86_400_000) buckets.get(key)!.push(r);
+    if (d < oldest) continue;
+    const key = dayKey(d);
+    if (buckets.has(key)) buckets.get(key)!.push(r);
   }
   return order.map((key) => {
     const list = buckets.get(key)!;

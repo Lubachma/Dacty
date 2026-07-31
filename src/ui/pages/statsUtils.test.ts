@@ -20,6 +20,8 @@ describe('dailyAverages', () => {
     expect(stats.map((s) => s.runs)).toEqual([0, 0, 0]);
     expect(stats[2].day).toBe('15/06');
     expect(stats[0].day).toBe('13/06');
+    expect(stats[0].avgWpm).toBe(0);
+    expect(stats[0].avgAccuracy).toBe(0);
   });
 
   it('moyenne les runs du jour', () => {
