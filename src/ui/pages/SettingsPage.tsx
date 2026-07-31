@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { db } from '@/db/db';
 import { useSettings } from '@/state/settingsStore';
 import { Toggle } from '@/ui/components/Toggle';
@@ -17,6 +17,10 @@ export function SettingsPage() {
   const update = useSettings((s) => s.update);
   const [pseudo, setPseudo] = useState(profile.pseudo);
   const [confirming, setConfirming] = useState(false);
+
+  useEffect(() => {
+    setPseudo(profile.pseudo);
+  }, [profile.pseudo]);
 
   const savePseudo = () => {
     const clean = pseudo.trim().slice(0, 30);
