@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Layout } from '@/ui/components/Layout';
 import { HomePage } from '@/ui/pages/HomePage';
 import { PlayPage } from '@/ui/pages/PlayPage';
+import { DevPage } from '@/ui/pages/DevPage';
 import { ChallengerPage } from '@/ui/pages/ChallengerPage';
 import { LeaderboardPage } from '@/ui/pages/LeaderboardPage';
 import { AchievementsPage } from '@/ui/pages/AchievementsPage';
@@ -22,6 +23,7 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/play" element={<PlayPage />} />
+          <Route path="/dev" element={<DevPage />} />
           <Route path="/challenger" element={<ChallengerPage />} />
           <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/achievements" element={<AchievementsPage />} />

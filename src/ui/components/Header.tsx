@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 const LINKS = [
   { to: '/', label: 'Accueil', end: true },
   { to: '/play', label: 'Entraînement' },
+  { to: '/dev', label: 'Dev' },
   { to: '/challenger', label: 'Challenger' },
   { to: '/leaderboard', label: 'Classements' },
   { to: '/achievements', label: 'Succès' },

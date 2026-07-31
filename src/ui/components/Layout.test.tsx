@@ -12,6 +12,7 @@ describe('Layout', () => {
       </MemoryRouter>,
     );
     expect(screen.getByRole('link', { name: 'Entraînement' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Dev' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Challenger' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Classements' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Succès' })).toBeInTheDocument();
