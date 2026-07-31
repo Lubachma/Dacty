@@ -1,5 +1,7 @@
 import frData from './fr.json';
 import enData from './en.json';
+import cData from './c.json';
+import pythonData from './python.json';
 import type { Language, TextEntry, TextLength } from './types';
 
 interface RawEntry {
@@ -19,6 +21,8 @@ export const CORPUS: TextEntry[] = [
   // les imports JSON sont typés `string` partout : on caste après validation au build
   ...load('fr', frData as unknown as { texts: RawEntry[] }),
   ...load('en', enData as unknown as { texts: RawEntry[] }),
+  ...load('c', cData as unknown as { texts: RawEntry[] }),
+  ...load('python', pythonData as unknown as { texts: RawEntry[] }),
 ];
 
 export function getTexts(language: Language): TextEntry[] {
