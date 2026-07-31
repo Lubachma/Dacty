@@ -29,13 +29,14 @@ export const useSettings = create<SettingsStore>((set, get) => ({
     set({ profile, loaded: true });
   },
   async update(patch) {
+    // application locale immédiate (feedback instantané), persistance ensuite
+    set({ profile: { ...get().profile, ...patch } });
+    if (patch.theme) applyTheme(patch.theme);
+    if (patch.sounds !== undefined) setSoundsEnabled(patch.sounds);
     try {
       await updateProfile(patch);
     } catch {
       // persistance indisponible : le réglage ne vaut que pour la session
     }
-    set({ profile: { ...get().profile, ...patch } });
-    if (patch.theme) applyTheme(patch.theme);
-    if (patch.sounds !== undefined) setSoundsEnabled(patch.sounds);
   },
 }));
