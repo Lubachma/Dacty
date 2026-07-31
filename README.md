@@ -41,7 +41,7 @@ Vite + React 19 + TypeScript strict, Tailwind CSS v4, Framer Motion, Zustand, De
 - `src/texts/` — corpus fr/en (JSON) + normalisation des toggles
 - `src/scoring/` — points Challenger + tiers de ligue
 - `src/db/` — Dexie : runs, profil, succès, progression Challenger
-- `src/achievements/` — 25 succès déclaratifs + moteur de déblocage
+- `src/achievements/` — 28 succès déclaratifs + moteur de déblocage
 - `src/game/` — orchestration de fin de run
 - `src/state/` — stores Zustand (run, settings, toasts)
 - `src/ui/` — composants et pages
