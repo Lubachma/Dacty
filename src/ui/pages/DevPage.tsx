@@ -53,6 +53,10 @@ export function DevPage() {
     return <ResultsScreen result={result} onReplay={begin} onExit={reset} />;
   }
 
+  if (status === 'finished') {
+    return null; // résultat en cours de calcul
+  }
+
   if (status === 'running' || status === 'paused' || status === 'invalidated') {
     return (
       <div className="flex flex-col gap-6">

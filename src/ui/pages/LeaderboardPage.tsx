@@ -27,12 +27,16 @@ export function LeaderboardPage() {
   const textChoices = mode === 'challenger' ? getOfficialTexts(language) : getTexts(language);
 
   useEffect(() => {
+    let active = true;
     void (async () => {
       const list = await topRuns({ mode, language, textId: textId || undefined });
+      const b = await personalBests();
+      if (!active) return;
       setRows(list);
-      setBests(await personalBests());
+      setBests(b);
       if (textId) {
         const all = await topRuns({ mode, language, textId }, 1000);
+        if (!active) return;
         const best = mode === 'challenger'
           ? Math.max(0, ...all.map((r) => r.points))
           : Math.max(0, ...all.map((r) => r.wpm));
@@ -41,6 +45,9 @@ export function LeaderboardPage() {
         setMyRank(null);
       }
     })();
+    return () => {
+      active = false;
+    };
   }, [mode, language, textId]);
 
   return (

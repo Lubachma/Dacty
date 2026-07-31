@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
-import type { RunResult } from '@/game/runFlow';
+import type { RecordKind, RunResult } from '@/game/runFlow';
 import { Sparkline } from './Sparkline';
 import { TierBadge } from './TierBadge';
 import type { AchievementDef } from '@/achievements/definitions';
 
-const RECORD_LABELS: Record<string, string> = {
+const RECORD_LABELS: Record<RecordKind, string> = {
   wpm: 'Nouveau record de WPM !',
   accuracy: 'Nouvelle meilleure précision !',
   longest: 'Ta plus longue run !',

@@ -7,6 +7,9 @@ import type { TypingState } from '@/engine/types';
 import { buildRunRecord, completeRun, type RunConfig, type RunResult } from '@/game/runFlow';
 import { useToasts } from './toastStore';
 
+// incrémenté à chaque start/reset : invalide les completeRun encore en vol
+let runGeneration = 0;
+
 export type RunStatus = 'idle' | 'running' | 'paused' | 'finished' | 'invalidated';
 
 interface RunStore {
@@ -30,6 +33,7 @@ export const useRunStore = create<RunStore>((set, get) => ({
   result: null,
 
   start(config, text) {
+    runGeneration += 1;
     set({ config, typing: createRun(text), result: null, status: 'running' });
   },
 
@@ -46,9 +50,15 @@ export const useRunStore = create<RunStore>((set, get) => ({
     }
     if (isFinished(next)) {
       set({ typing: next, status: 'finished' });
+      // un start/reset pendant completeRun rend ce résultat obsolète : on l'ignore
+      const generation = runGeneration;
       void completeRun(next, config, Date.now())
-        .then((result) => set({ result }))
+        .then((result) => {
+          if (runGeneration !== generation) return;
+          set({ result });
+        })
         .catch(() => {
+          if (runGeneration !== generation) return;
           // IndexedDB indisponible (navigation privée) : résultats affichés, rien n'est persisté
           const now = Date.now();
           set({
@@ -96,6 +106,7 @@ export const useRunStore = create<RunStore>((set, get) => ({
   },
 
   reset() {
+    runGeneration += 1;
     set({ status: 'idle', config: null, typing: null, result: null });
   },
 }));

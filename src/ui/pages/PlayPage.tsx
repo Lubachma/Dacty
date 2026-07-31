@@ -36,6 +36,10 @@ export function PlayPage() {
   useFocusGuard();
 
   useEffect(() => {
+    setLanguage(profile.defaultLanguage);
+  }, [profile.defaultLanguage]);
+
+  useEffect(() => {
     if (!result) return;
     result.newAchievements.forEach((a) =>
       push({ title: a.title, description: a.description, kind: 'achievement' }),
@@ -60,6 +64,10 @@ export function PlayPage() {
 
   if (status === 'finished' && result) {
     return <ResultsScreen result={result} onReplay={begin} onExit={reset} />;
+  }
+
+  if (status === 'finished') {
+    return null; // résultat en cours de calcul
   }
 
   if (status === 'running' || status === 'paused' || status === 'invalidated') {

@@ -13,7 +13,7 @@ import { ALL_OPTIONS_ON, applyOptions } from '@/texts/normalize';
 import { getProgress } from '@/db/challengerRepo';
 import type { ChallengerProgress } from '@/db/types';
 import { nextTier, TIER_THRESHOLDS } from '@/scoring/league';
-import { LANGUAGE_LABELS, type Language } from '@/texts/types';
+import { isCodeLanguage, LANGUAGE_LABELS, type Language } from '@/texts/types';
 
 const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' });
 
@@ -62,10 +62,23 @@ export function ChallengerPage() {
   const [progress, setProgress] = useState<ChallengerProgress | null>(null);
   useFocusGuard();
 
+  useEffect(() => {
+    setLanguage(profile.defaultLanguage);
+  }, [profile.defaultLanguage]);
+
   const refresh = useCallback(() => {
-    void getProgress(language).then(setProgress);
+    let active = true;
+    void getProgress(language).then((p) => {
+      if (active) setProgress(p);
+    });
+    return () => {
+      active = false;
+    };
   }, [language]);
-  useEffect(refresh, [refresh]);
+  useEffect(() => {
+    const cancel = refresh();
+    return cancel;
+  }, [refresh]);
 
   useEffect(() => {
     if (!result) return;
@@ -82,7 +95,8 @@ export function ChallengerPage() {
   const play = (textId: string) => {
     const entry = getOfficialTexts(language).find((t) => t.id === textId);
     if (!entry) return;
-    const text = applyOptions(entry.text, ALL_OPTIONS_ON);
+    // code toujours brut (applyOptions détruirait les sauts de ligne)
+    const text = isCodeLanguage(language) ? entry.text : applyOptions(entry.text, ALL_OPTIONS_ON);
     start({ mode: 'challenger', language, textId, options: ALL_OPTIONS_ON }, text);
   };
 
@@ -97,6 +111,10 @@ export function ChallengerPage() {
 
   if (status === 'finished' && result) {
     return <ResultsScreen result={result} onReplay={() => result.run && play(result.run.textId)} onExit={reset} />;
+  }
+
+  if (status === 'finished') {
+    return null; // résultat en cours de calcul
   }
 
   if (status === 'running' || status === 'paused' || status === 'invalidated') {

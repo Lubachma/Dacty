@@ -57,7 +57,7 @@ export function TypingArea({ state, disabled = false, onChar, onBackspace }: Typ
             onBackspace();
             return;
           }
-          if (e.key === 'Enter') {
+          if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.altKey) {
             e.preventDefault();
             onChar('\n');
             return;

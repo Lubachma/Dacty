@@ -39,4 +39,16 @@ describe('ChallengerPage', () => {
     expect(config?.textId).toBe('fr-101');
     expect(config?.options).toEqual({ punctuation: true, specialChars: true, digits: true, accents: true });
   });
+
+  it('démarre une run challenger C avec le code brut multi-lignes', async () => {
+    render(<MemoryRouter><ChallengerPage /></MemoryRouter>);
+    await userEvent.click(await screen.findByRole('button', { name: 'C' }));
+    const buttons = await screen.findAllByRole('button', { name: 'Jouer' });
+    await userEvent.click(buttons[0]);
+    expect(await screen.findByTestId('typing-area')).toBeInTheDocument();
+    const config = useRunStore.getState().config;
+    expect(config?.language).toBe('c');
+    expect(config?.mode).toBe('challenger');
+    expect(useRunStore.getState().typing?.text).toContain('\n');
+  });
 });
