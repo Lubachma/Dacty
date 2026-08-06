@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Outlet } from 'react-router';
 import { Header } from './Header';
 import { ToastHost } from './ToastHost';
@@ -25,7 +25,9 @@ export function Layout() {
         </div>
       )}
       <main className="mx-auto max-w-5xl px-4 py-8">
-        <Outlet />
+        <Suspense fallback={<p className="py-16 text-center text-muted">Chargement…</p>}>
+          <Outlet />
+        </Suspense>
       </main>
       <ToastHost />
     </div>

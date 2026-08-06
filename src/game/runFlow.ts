@@ -6,6 +6,7 @@ import type { Tier } from '@/scoring/league';
 import type { ChallengerProgress, GameMode, RunRecord } from '@/db/types';
 import { personalBests, saveRun } from '@/db/runsRepo';
 import { recordChallengerResult } from '@/db/challengerRepo';
+import { getOfficialTexts } from '@/texts/corpus';
 import { buildContext, unlockNew } from '@/achievements/check';
 import type { AchievementDef } from '@/achievements/definitions';
 import type { Language, TextOptions } from '@/texts/types';
@@ -71,7 +72,8 @@ export async function completeRun(state: TypingState, config: RunConfig, now: nu
   let tierUp: Tier | null = null;
   let progress: ChallengerProgress | null = null;
   if (config.mode === 'challenger') {
-    const r = await recordChallengerResult(config.language, config.textId, points, now);
+    const officialIds = getOfficialTexts(config.language).map((t) => t.id);
+    const r = await recordChallengerResult(config.language, config.textId, points, now, officialIds);
     tierUp = r.tierUp;
     progress = r.progress;
   }

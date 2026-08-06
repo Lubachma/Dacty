@@ -29,9 +29,14 @@ supplémentaires mais risque de régression visuelle ; pourra venir plus tard.
   dexie pour les runs récents et la progression challenger).
 - **Lazy** : `PlayPage`, `DevPage`, `ChallengerPage`, `LeaderboardPage`,
   `AchievementsPage`, `StatsPage`, `SettingsPage`.
+- **Inversion de dépendance** : `recordChallengerResult`
+  reçoit désormais `officialIds: string[]` en paramètre (fourni par `runFlow`), afin que
+  `src/db/challengerRepo.ts` n'importe plus `@/texts/corpus` — sinon le corpus restait
+  statiquement atteignable depuis la HomePage (eager) et le split ne sortait rien.
 - Les pages sont des exports nommés : pattern
   `lazy(() => import('@/ui/pages/PlayPage').then((m) => ({ default: m.PlayPage })))`.
-- Une seule frontière `<Suspense>` autour de `<Routes>`, fallback minimal cohérent avec le
+- Une seule frontière `<Suspense>` dans `Layout.tsx` autour de `<Outlet />` (le header reste
+  visible), fallback minimal cohérent avec le
   thème : `<p className="py-16 text-center text-muted">Chargement…</p>`.
 
 ### Effets attendus

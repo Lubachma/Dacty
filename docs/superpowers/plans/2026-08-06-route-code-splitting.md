@@ -28,7 +28,7 @@
 - Consumes: `export default function App()` de `src/App.tsx` (inchangé ici).
 - Produces: le texte de fallback `Chargement…` que Task 2 devra rendre dans `Layout.tsx`.
 
-- [ ] **Step 1: Écrire le test**
+- [x] **Step 1: Écrire le test**
 
 ```tsx
 import 'fake-indexeddb/auto';
@@ -48,13 +48,13 @@ describe('App', () => {
     render(<App />);
     // chunk pas encore résolu : fallback dans <main>, header toujours présent
     expect(screen.getByText('Chargement…')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Accueil' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Dacty' })).toBeInTheDocument();
     expect(await screen.findByRole('heading', { name: 'Succès' })).toBeInTheDocument();
   });
 });
 ```
 
-- [ ] **Step 2: Vérifier le rouge**
+- [x] **Step 2: Vérifier le rouge**
 
 Run: `npx vitest run src/App.test.tsx`
 Expected: 1 passed (accueil), 1 failed — `Unable to find an element with the text: Chargement…`.
@@ -69,7 +69,7 @@ Expected: 1 passed (accueil), 1 failed — `Unable to find an element with the t
 - Consumes: exports nommés `PlayPage`, `DevPage`, `ChallengerPage`, `LeaderboardPage`, `AchievementsPage`, `StatsPage`, `SettingsPage` (existants, inchangés) ; `HomePage` reste un import statique.
 - Produces: chunk d'entrée sans corpus ni pages secondaires ; fallback texte exact `Chargement…` (attendu par `src/App.test.tsx`).
 
-- [ ] **Step 1: Réécrire `src/App.tsx`**
+- [x] **Step 1: Réécrire `src/App.tsx`**
 
 ```tsx
 import { lazy, useEffect } from 'react';
@@ -120,7 +120,7 @@ export default function App() {
 }
 ```
 
-- [ ] **Step 2: `Layout.tsx` — frontière Suspense autour de `<Outlet />`**
+- [x] **Step 2: `Layout.tsx` — frontière Suspense autour de `<Outlet />`**
 
 Import (ligne 1) : remplacer `import { useEffect, useState } from 'react';` par :
 
@@ -146,12 +146,12 @@ par
       </main>
 ```
 
-- [ ] **Step 3: Vérifier le vert**
+- [x] **Step 3: Vérifier le vert**
 
 Run: `npx vitest run src/App.test.tsx`
 Expected: 2 passed.
 
-- [ ] **Step 4: Suite complète + build**
+- [x] **Step 4: Suite complète + build**
 
 Run: `npm run test 2>&1 | tail -3 && npm run build 2>&1 | tail -2`
 Expected: `Tests  125 passed (125)` et `✓ built`.
@@ -164,17 +164,17 @@ Expected: `Tests  125 passed (125)` et `✓ built`.
 **Interfaces:**
 - Consumes: le build de Task 2.
 
-- [ ] **Step 1: Noter la baseline actuelle**
+- [x] **Step 1: Noter la baseline actuelle**
 
 Run: `ls -la dist/assets/ | sort -k5 -n`
 Expected: le build précédent montrait un seul chunk JS (~621 Ko). Si `dist/` reflète déjà Task 2, noter la taille de l'entrée actuelle et comparer au 621 Ko documenté dans la spec.
 
-- [ ] **Step 2: Vérifier la composition des chunks**
+- [x] **Step 2: Vérifier la composition des chunks**
 
 Run: `ls -la dist/assets/*.js | awk '{print $5, $9}' | sort -n`
 Expected: plusieurs chunks JS ; un chunk contenant le corpus (~95 Ko, chargé à la demande) ; l'entrée ~490 Ko ou moins. Vérifier que le plus gros chunk hors entrée correspond aux pages/corpus.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/App.tsx src/App.test.tsx src/ui/components/Layout.tsx docs/superpowers/
@@ -182,3 +182,18 @@ git commit -m "perf: lazy-load secondary routes (React.lazy + Suspense in Layout
 ```
 
 Expected: `git log --oneline -1` affiche le commit ; `git status --short` est vide.
+
+---
+
+### Task 2b (ajoutée en exécution): inverser la dépendance challengerRepo → corpus
+
+Constate après Task 2 : l'entrée ne perdait que ~34 Ko. Cause : `challengerRepo.ts` importait
+`getOfficialTexts` depuis `@/texts/corpus`, et `HomePage` (eager) importe `challengerRepo` →
+le corpus restait dans le graphe statique.
+
+Changement : `recordChallengerResult(language, textId, points, now, officialIds: string[])` —
+les ids officiels sont injectés par l'appelant (`runFlow`). Appels mis à jour :
+`src/game/runFlow.ts`, `src/db/challengerRepo.test.ts`, `src/ui/pages/ChallengerPage.test.tsx`.
+
+Résultat mesuré : chunk `corpus-*.js` séparé (63 Ko), entrée 621 Ko → 523 Ko minifié
+(~166 Ko gzip). 125/125 tests, build vert.

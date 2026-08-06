@@ -5,8 +5,11 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { MemoryRouter } from 'react-router';
 import { db } from '@/db/db';
 import { recordChallengerResult } from '@/db/challengerRepo';
+import { getOfficialTexts } from '@/texts/corpus';
 import { useRunStore } from '@/state/runStore';
 import { ChallengerPage } from './ChallengerPage';
+
+const frOfficial = getOfficialTexts('fr').map((t) => t.id);
 
 beforeEach(async () => {
   await Promise.all(db.tables.map((t) => t.clear()));
@@ -21,8 +24,8 @@ describe('ChallengerPage', () => {
   });
 
   it('affiche le tier et le total après des résultats', async () => {
-    await recordChallengerResult('fr', 'fr-101', 60, Date.now());
-    await recordChallengerResult('fr', 'fr-102', 55, Date.now());
+    await recordChallengerResult('fr', 'fr-101', 60, Date.now(), frOfficial);
+    await recordChallengerResult('fr', 'fr-102', 55, Date.now(), frOfficial);
     render(<MemoryRouter><ChallengerPage /></MemoryRouter>);
     expect(await screen.findByText('Bronze')).toBeInTheDocument();
     expect(screen.getAllByText(/115/).length).toBeGreaterThan(0);

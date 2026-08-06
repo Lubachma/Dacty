@@ -2,7 +2,6 @@ import { db } from './db';
 import { challengerProgressSchema } from './schemas';
 import type { ChallengerProgress } from './types';
 import type { Language } from '@/texts/types';
-import { getOfficialTexts } from '@/texts/corpus';
 import { tierForPoints, tierRank, type Tier } from '@/scoring/league';
 
 const empty = (language: Language): ChallengerProgress => ({
@@ -21,15 +20,17 @@ export async function recordChallengerResult(
   textId: string,
   points: number,
   now: number,
+  officialIds: string[],
 ): Promise<{ progress: ChallengerProgress; tierUp: Tier | null }> {
   const current = await getProgress(language);
   const bestByText = {
     ...current.bestByText,
     [textId]: Math.max(current.bestByText[textId] ?? 0, points),
   };
-  const officialIds = new Set(getOfficialTexts(language).map((t) => t.id));
+  // la couche db ne connaît pas le corpus : les ids officiels sont injectés par l'appelant
+  const official = new Set(officialIds);
   const total = Object.entries(bestByText)
-    .filter(([id]) => officialIds.has(id))
+    .filter(([id]) => official.has(id))
     .reduce((sum, [, p]) => sum + p, 0);
   const tier = tierForPoints(total);
   const tierUp = tier !== null && (current.tier === null || tierRank(tier) > tierRank(current.tier))
