@@ -21,3 +21,29 @@ export const challengerProgressSchema = z.object({
   tier: tierSchema.nullable(),
   tierHistory: z.array(z.object({ tier: tierSchema, at: z.number() })),
 });
+
+export const textOptionsSchema = z.object({
+  punctuation: z.boolean(),
+  specialChars: z.boolean(),
+  digits: z.boolean(),
+  accents: z.boolean(),
+});
+
+// miroir exact de RunRecord : toute ligne qui ne satisfait pas ce schéma est
+// considérée comme corrompue et écartée à la lecture (voir runsRepo.parseRuns)
+export const runRecordSchema = z.object({
+  id: z.number().int().min(1).optional(),
+  date: z.number().int().positive(),
+  mode: z.enum(['free', 'challenger']),
+  language: languageSchema,
+  textId: z.string().min(1),
+  options: textOptionsSchema,
+  durationMs: z.number().int().min(0),
+  wpm: z.number().finite().min(0),
+  accuracy: z.number().finite().min(0).max(1), // fraction, pas un pourcentage
+  points: z.number().finite().min(0),
+  errors: z.number().int().min(0),
+  backspaces: z.number().int().min(0),
+  chars: z.number().int().min(0),
+  noBackspace: z.boolean(),
+});
