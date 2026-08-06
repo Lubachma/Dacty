@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 import { Header } from './Header';
 import { ToastHost } from './ToastHost';
-import { checkPersistence } from '@/db/persistence';
+import { checkPersistence, requestPersistence } from '@/db/persistence';
 
 export function Layout() {
   const [persistent, setPersistent] = useState(true);
   useEffect(() => {
     let active = true;
+    void requestPersistence();
     void checkPersistence().then((ok) => {
       if (active) setPersistent(ok);
     });
@@ -19,7 +20,7 @@ export function Layout() {
     <div className="min-h-screen">
       <Header />
       {!persistent && (
-        <div className="bg-err/15 px-4 py-2 text-center text-sm text-err">
+        <div role="alert" className="bg-err/15 px-4 py-2 text-center text-sm text-err">
           Stockage indisponible : ta progression ne sera pas sauvegardée (navigation privée ?).
         </div>
       )}

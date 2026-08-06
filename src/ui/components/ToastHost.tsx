@@ -5,7 +5,11 @@ export function ToastHost() {
   const toasts = useToasts((s) => s.toasts);
   const dismiss = useToasts((s) => s.dismiss);
   return (
-    <div className="pointer-events-none fixed right-4 bottom-4 z-50 flex w-80 flex-col gap-2">
+    <div
+      role="status"
+      aria-live="polite"
+      className="pointer-events-none fixed right-4 bottom-4 z-50 flex w-80 flex-col gap-2"
+    >
       <AnimatePresence>
         {toasts.map((t) => (
           <motion.button

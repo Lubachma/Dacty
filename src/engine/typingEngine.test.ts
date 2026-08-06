@@ -85,4 +85,14 @@ describe('typingEngine', () => {
       { at: 1200, kind: 'backspace', correct: true },
     ]);
   });
+
+  it('frappe synthétique : avance sans compter la frappe ni l\'événement', () => {
+    let s = createRun('a b');
+    s = typeChar(s, 'a', 1000);
+    s = typeChar(s, ' ', 1100, true);
+    expect(s.cursor).toBe(2);
+    expect(s.statuses[1]).toBe('correct');
+    expect(s.keystrokes).toBe(1);
+    expect(s.events).toHaveLength(1);
+  });
 });

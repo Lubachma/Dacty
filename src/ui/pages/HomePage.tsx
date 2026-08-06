@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { motion } from 'framer-motion';
 import { allRuns } from '@/db/runsRepo';
 import { getProgress } from '@/db/challengerRepo';
@@ -31,11 +31,13 @@ export function HomePage() {
 
   useEffect(() => {
     for (const lang of ['fr', 'en', 'c', 'python'] as const) {
-      void getProgress(lang).then((p) => setProgress((s) => ({ ...s, [lang]: p })));
+      void getProgress(lang)
+        .then((p) => setProgress((s) => ({ ...s, [lang]: p })))
+        .catch(() => { /* IndexedDB indisponible : progression masquée */ });
     }
-    void allRuns().then((runs) =>
-      setRecent(runs.sort((a, b) => b.date - a.date).slice(0, 5)),
-    );
+    void allRuns()
+      .then((runs) => setRecent(runs.sort((a, b) => b.date - a.date).slice(0, 5)))
+      .catch(() => { /* IndexedDB indisponible : liste vide déjà gérée */ });
   }, []);
 
   return (

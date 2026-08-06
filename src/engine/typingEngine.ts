@@ -21,19 +21,21 @@ function active(state: TypingState): boolean {
   return state.finishedAt === null && state.pauseStartedAt === null;
 }
 
-export function typeChar(state: TypingState, char: string, now: number): TypingState {
+export function typeChar(state: TypingState, char: string, now: number, synthetic = false): TypingState {
   if (!active(state) || state.cursor >= state.text.length || char.length !== 1) return state;
   const correct = state.text[state.cursor] === char;
   const statuses = state.statuses.slice();
   statuses[state.cursor] = correct ? 'correct' : 'incorrect';
+  // synthetic (auto-indentation) : ni frappe ni événement, pour ne pas gonfler
+  // la précision ni la timeline — le caractère est toujours celui attendu
   const next: TypingState = {
     ...state,
     statuses,
     cursor: state.cursor + 1,
-    errors: correct ? state.errors : state.errors + 1,
-    keystrokes: state.keystrokes + 1,
+    errors: correct || synthetic ? state.errors : state.errors + 1,
+    keystrokes: synthetic ? state.keystrokes : state.keystrokes + 1,
     startedAt: state.startedAt ?? now,
-    events: [...state.events, { at: now, kind: 'char', correct }],
+    events: synthetic ? state.events : [...state.events, { at: now, kind: 'char', correct }],
   };
   if (next.cursor === next.text.length && next.statuses.every((s) => s === 'correct')) {
     next.finishedAt = now;

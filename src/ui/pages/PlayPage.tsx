@@ -73,9 +73,9 @@ export function PlayPage() {
   if (status === 'running' || status === 'paused' || status === 'invalidated') {
     return (
       <div className="flex flex-col gap-6">
-        {typing && <RunHud typing={typing} />}
+        {typing && <RunHud typing={typing} live={status === 'running'} />}
         {status === 'invalidated' ? (
-          <div className="rounded-xl border border-err/40 bg-err/10 p-6 text-center">
+          <div role="alert" className="rounded-xl border border-err/40 bg-err/10 p-6 text-center">
             <p className="mb-4 font-bold text-err">Run invalidée : la fenêtre a perdu le focus trop longtemps.</p>
             <button
               type="button"

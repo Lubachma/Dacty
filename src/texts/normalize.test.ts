@@ -11,7 +11,7 @@ describe('applyOptions', () => {
 
   it('supprime les accents quand accents=false', () => {
     expect(applyOptions('Éléphant à Noël, cœur brisé', off({ accents: false })))
-      .toBe('Elephant a Noel, cœur brise');
+      .toBe('Elephant a Noel, coeur brise');
   });
 
   it('supprime les chiffres quand digits=false', () => {

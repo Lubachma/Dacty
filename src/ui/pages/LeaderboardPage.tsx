@@ -29,20 +29,24 @@ export function LeaderboardPage() {
   useEffect(() => {
     let active = true;
     void (async () => {
-      const list = await topRuns({ mode, language, textId: textId || undefined });
-      const b = await personalBests();
-      if (!active) return;
-      setRows(list);
-      setBests(b);
-      if (textId) {
-        const all = await topRuns({ mode, language, textId }, 1000);
+      try {
+        const list = await topRuns({ mode, language, textId: textId || undefined });
+        const b = await personalBests();
         if (!active) return;
-        const best = mode === 'challenger'
-          ? Math.max(0, ...all.map((r) => r.points))
-          : Math.max(0, ...all.map((r) => r.wpm));
-        setMyRank(await rankFor({ mode, language, textId }, best));
-      } else {
-        setMyRank(null);
+        setRows(list);
+        setBests(b);
+        if (textId) {
+          const all = await topRuns({ mode, language, textId }, 1000);
+          if (!active) return;
+          const best = mode === 'challenger'
+            ? Math.max(0, ...all.map((r) => r.points))
+            : Math.max(0, ...all.map((r) => r.wpm));
+          setMyRank(await rankFor({ mode, language, textId }, best));
+        } else {
+          setMyRank(null);
+        }
+      } catch {
+        // IndexedDB indisponible : listes vides déjà gérées
       }
     })();
     return () => {

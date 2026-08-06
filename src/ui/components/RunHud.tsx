@@ -12,12 +12,13 @@ function Cell({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function RunHud({ typing }: { typing: TypingState }) {
+export function RunHud({ typing, live = true }: { typing: TypingState; live?: boolean }) {
   const [, setTick] = useState(0);
   useEffect(() => {
+    if (!live) return undefined; // en pause, les valeurs sont gelées : pas de ticker
     const id = setInterval(() => setTick((t) => t + 1), 500);
     return () => clearInterval(id);
-  }, []);
+  }, [live]);
   const now = Date.now();
   const wpm = liveWpm(typing, now);
   const accuracy = computeAccuracy(typing.keystrokes, typing.errors);

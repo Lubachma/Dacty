@@ -33,4 +33,33 @@ describe('useFocusGuard', () => {
     expect(useRunStore.getState().status).toBe('invalidated');
     vi.useRealTimers();
   });
+
+  it("invalide au retour de focus si l'absence a dépassé le délai (timer throttlé en arrière-plan)", () => {
+    vi.useFakeTimers();
+    useRunStore.getState().start(config, 'ab');
+    useRunStore.getState().key('a');
+    renderHook(() => useFocusGuard());
+
+    act(() => { window.dispatchEvent(new Event('blur')); });
+    expect(useRunStore.getState().status).toBe('paused');
+
+    // onglet caché : le setTimeout d'invalidation n'a pas tourné (throttlé),
+    // mais l'horloge système a avancé au-delà du délai
+    act(() => { vi.setSystemTime(Date.now() + 10_000); });
+    act(() => { window.dispatchEvent(new Event('focus')); });
+    expect(useRunStore.getState().status).toBe('invalidated');
+    vi.useRealTimers();
+  });
+
+  it("met en pause quand l'onglet devient caché (visibilitychange)", () => {
+    useRunStore.getState().start(config, 'ab');
+    useRunStore.getState().key('a');
+    renderHook(() => { useFocusGuard(); });
+
+    const original = Object.getOwnPropertyDescriptor(document, 'visibilityState');
+    Object.defineProperty(document, 'visibilityState', { value: 'hidden', configurable: true });
+    act(() => { document.dispatchEvent(new Event('visibilitychange')); });
+    expect(useRunStore.getState().status).toBe('paused');
+    if (original) Object.defineProperty(document, 'visibilityState', original);
+  });
 });

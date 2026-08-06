@@ -2,7 +2,7 @@ import 'fake-indexeddb/auto';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { db } from '@/db/db';
 import { useRunStore } from '@/state/runStore';
 import { DevPage } from './DevPage';

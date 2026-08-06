@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router';
 
 const LINKS = [
   { to: '/', label: 'Accueil', end: true },
@@ -14,7 +14,7 @@ const LINKS = [
 export function Header() {
   return (
     <header className="sticky top-0 z-10 border-b border-line bg-bg/80 backdrop-blur">
-      <nav className="mx-auto flex max-w-5xl items-center gap-1 px-4 py-3">
+      <nav className="mx-auto flex max-w-5xl flex-wrap items-center gap-1 px-4 py-3">
         <NavLink to="/" className="mr-4 text-lg font-extrabold tracking-tight text-accent">
           Dacty
         </NavLink>

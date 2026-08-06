@@ -14,6 +14,7 @@ export function useFocusGuard(): void {
     if (status !== 'running' && status !== 'paused') return;
     const { pause, resume, invalidate } = useRunStore.getState();
     const onBlur = () => {
+      if (useRunStore.getState().status !== 'running') return;
       pause();
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(invalidate, timeoutSec * 1000);
@@ -21,13 +22,25 @@ export function useFocusGuard(): void {
     const onFocus = () => {
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = null;
-      resume();
+      // les timers sont throttlés quand l'onglet est caché : le setTimeout
+      // d'invalidation peut ne pas avoir tourné. On tranche depuis l'heure
+      // réelle du début de pause.
+      const pausedAt = useRunStore.getState().typing?.pauseStartedAt;
+      if (pausedAt != null && Date.now() - pausedAt > timeoutSec * 1000) invalidate();
+      else resume();
+    };
+    // mobile : verrouillage/bascule d'app émet visibilitychange sans blur fiable
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') onBlur();
+      else onFocus();
     };
     window.addEventListener('blur', onBlur);
     window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVisibility);
     return () => {
       window.removeEventListener('blur', onBlur);
       window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, [status, timeoutSec]);
 

@@ -9,25 +9,58 @@ interface TypingAreaProps {
   onBackspace: () => void;
 }
 
+export interface CaretRect {
+  x: number;
+  y: number;
+  h: number;
+}
+
+// Position du curseur mesurée depuis la padding box du conteneur : c'est
+// l'origine d'un enfant positionné avec left-0/top-0 (la bordure est exclue).
+// On prend le premier fragment du caractère ciblé : les spans « ↵\n » en
+// génèrent un deuxième, vide, sur la ligne suivante — la boîte englobante
+// ferait deux lignes de haut.
+export function computeCaret(
+  container: HTMLElement,
+  chars: ArrayLike<HTMLElement>,
+  cursor: number,
+): CaretRect | null {
+  if (chars.length === 0) return null;
+  const idx = Math.min(cursor, chars.length - 1);
+  const target = chars[idx];
+  const rect = target.getClientRects()[0] ?? target.getBoundingClientRect();
+  const cRect = container.getBoundingClientRect();
+  const originX = cRect.left + container.clientLeft;
+  const originY = cRect.top + container.clientTop;
+  return {
+    x: (cursor >= chars.length ? rect.right : rect.left) - originX,
+    y: rect.top - originY,
+    h: rect.height,
+  };
+}
+
 export function TypingArea({ state, disabled = false, onChar, onBackspace }: TypingAreaProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [caret, setCaret] = useState({ x: 0, y: 0, h: 28 });
+  const [caret, setCaret] = useState<CaretRect>({ x: 0, y: 0, h: 28 });
 
   useLayoutEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    const chars = container.querySelectorAll<HTMLSpanElement>('[data-char]');
-    if (chars.length === 0) return;
-    const idx = Math.min(state.cursor, chars.length - 1);
-    const target = chars[idx];
-    const cRect = container.getBoundingClientRect();
-    const tRect = target.getBoundingClientRect();
-    setCaret({
-      x: (state.cursor >= chars.length ? tRect.right : tRect.left) - cRect.left,
-      y: tRect.top - cRect.top,
-      h: tRect.height,
-    });
+    const update = () => {
+      const next = computeCaret(
+        container,
+        container.querySelectorAll<HTMLElement>('[data-char]'),
+        state.cursor,
+      );
+      if (next) setCaret(next);
+    };
+    update();
+    // le texte peut se ré-agencer sans frappe (redimensionnement, fontes) : on recalcule
+    if (typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(update);
+    ro.observe(container);
+    return () => ro.disconnect();
   }, [state.cursor, state.text]);
 
   return (
@@ -35,7 +68,9 @@ export function TypingArea({ state, disabled = false, onChar, onBackspace }: Typ
       ref={containerRef}
       data-testid="typing-area"
       onClick={() => inputRef.current?.focus()}
-      className="relative cursor-text rounded-xl border border-line bg-surface p-6 font-type text-xl leading-relaxed break-words whitespace-pre-wrap backdrop-blur select-none"
+      className={`relative cursor-text rounded-xl border border-line bg-surface p-6 font-type text-xl leading-relaxed break-words whitespace-pre-wrap backdrop-blur select-none ${
+        disabled ? 'opacity-60' : ''
+      }`}
     >
       <input
         ref={inputRef}
@@ -43,6 +78,10 @@ export function TypingArea({ state, disabled = false, onChar, onBackspace }: Typ
         className="absolute h-1 w-1 opacity-0"
         autoFocus
         defaultValue=""
+        autoCapitalize="off"
+        autoCorrect="off"
+        autoComplete="off"
+        spellCheck={false}
         onChange={(e) => {
           // caractères composés (touches mortes, IME) : non vus par onKeyDown
           const v = e.target.value;
@@ -52,6 +91,11 @@ export function TypingArea({ state, disabled = false, onChar, onBackspace }: Typ
         }}
         onKeyDown={(e) => {
           if (disabled) return;
+          if (e.key === 'Tab') {
+            // garder le focus dans la zone de saisie pendant la run
+            e.preventDefault();
+            return;
+          }
           if (e.key === 'Backspace') {
             e.preventDefault();
             onBackspace();
@@ -71,7 +115,7 @@ export function TypingArea({ state, disabled = false, onChar, onBackspace }: Typ
       />
       <motion.span
         data-testid="caret"
-        className="absolute w-0.5 rounded bg-accent"
+        className="absolute top-0 left-0 w-0.5 rounded bg-accent"
         animate={{ x: caret.x, y: caret.y, height: caret.h }}
         transition={{ type: 'spring', stiffness: 500, damping: 40 }}
       />
@@ -84,7 +128,7 @@ export function TypingArea({ state, disabled = false, onChar, onBackspace }: Typ
             state.statuses[i] === 'correct'
               ? 'text-ok'
               : state.statuses[i] === 'incorrect'
-                ? 'rounded-sm bg-err/15 text-err'
+                ? 'rounded-sm bg-err/15 text-err underline underline-offset-2'
                 : 'text-muted'
           }
         >

@@ -12,7 +12,14 @@ const collapse = (s: string): string => s.replace(/\s+/g, ' ').trim();
 export function applyOptions(raw: string, options: TextOptions): string {
   let out = raw;
   if (!options.accents) {
-    out = out.normalize('NFD').replace(/\p{M}/gu, '');
+    // NFD ne décompose pas les ligatures : œ/æ d'abord, puis les diacritiques
+    out = out
+      .replace(/œ/g, 'oe')
+      .replace(/Œ/g, 'Oe')
+      .replace(/æ/g, 'ae')
+      .replace(/Æ/g, 'Ae')
+      .normalize('NFD')
+      .replace(/\p{M}/gu, '');
   }
   if (!options.digits) {
     out = out.replace(/\p{N}/gu, '');

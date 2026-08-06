@@ -68,9 +68,11 @@ export function ChallengerPage() {
 
   const refresh = useCallback(() => {
     let active = true;
-    void getProgress(language).then((p) => {
-      if (active) setProgress(p);
-    });
+    void getProgress(language)
+      .then((p) => {
+        if (active) setProgress(p);
+      })
+      .catch(() => { /* IndexedDB indisponible : progression masquée */ });
     return () => {
       active = false;
     };

@@ -2,9 +2,10 @@ import 'fake-indexeddb/auto';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { db } from '@/db/db';
 import { useRunStore } from '@/state/runStore';
+import { ALL_OPTIONS_ON } from '@/texts/normalize';
 import { PlayPage } from './PlayPage';
 
 beforeEach(async () => {
@@ -20,5 +21,15 @@ describe('PlayPage', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Démarrer' }));
     expect(await screen.findByTestId('typing-area')).toBeInTheDocument();
     expect(useRunStore.getState().config?.mode).toBe('free');
+  });
+
+  it('annonce une run invalidée via un rôle alerte', () => {
+    useRunStore.getState().start(
+      { mode: 'free', language: 'fr', textId: 'fr-001', options: ALL_OPTIONS_ON },
+      'ab',
+    );
+    useRunStore.getState().invalidate();
+    render(<MemoryRouter><PlayPage /></MemoryRouter>);
+    expect(screen.getByRole('alert')).toBeInTheDocument();
   });
 });

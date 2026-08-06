@@ -43,9 +43,10 @@ export const useRunStore = create<RunStore>((set, get) => ({
     let next = typeChar(typing, char, Date.now());
     if (next === typing) return;
     // auto-indentation : après un saut de ligne correct, tape les espaces attendus
+    // (frappes synthétiques : ne comptent ni dans les frappes ni dans la timeline)
     if (char === '\n' && next.statuses[next.cursor - 1] === 'correct') {
       while (next.text[next.cursor] === ' ' && !isFinished(next)) {
-        next = typeChar(next, ' ', Date.now());
+        next = typeChar(next, ' ', Date.now(), true);
       }
     }
     if (isFinished(next)) {

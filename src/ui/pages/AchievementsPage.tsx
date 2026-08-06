@@ -62,20 +62,24 @@ export function AchievementsPage() {
 
   useEffect(() => {
     void (async () => {
-      const [runs, unlocks, fr, en, c, python] = await Promise.all([
-        allRuns(), db.achievements.toArray(),
-        getProgress('fr'), getProgress('en'), getProgress('c'), getProgress('python'),
-      ]);
-      setUnlocked(new Map(unlocks.map((u) => [u.id, u.unlockedAt])));
-      const sorted = runs.slice().sort((a, b) => a.date - b.date);
-      setCtx({
-        newRun: sorted[sorted.length - 1] ?? SYNTHETIC_RUN,
-        runs,
-        totalChars: runs.reduce((s, r) => s + r.chars, 0),
-        streakDays: computeStreak(runs.map((r) => r.date), Date.now()),
-        progress: { fr, en, c, python },
-        now: Date.now(),
-      });
+      try {
+        const [runs, unlocks, fr, en, c, python] = await Promise.all([
+          allRuns(), db.achievements.toArray(),
+          getProgress('fr'), getProgress('en'), getProgress('c'), getProgress('python'),
+        ]);
+        setUnlocked(new Map(unlocks.map((u) => [u.id, u.unlockedAt])));
+        const sorted = runs.slice().sort((a, b) => a.date - b.date);
+        setCtx({
+          newRun: sorted[sorted.length - 1] ?? SYNTHETIC_RUN,
+          runs,
+          totalChars: runs.reduce((s, r) => s + r.chars, 0),
+          streakDays: computeStreak(runs.map((r) => r.date), Date.now()),
+          progress: { fr, en, c, python },
+          now: Date.now(),
+        });
+      } catch {
+        // IndexedDB indisponible : la page reste à 0 / N
+      }
     })();
   }, []);
 

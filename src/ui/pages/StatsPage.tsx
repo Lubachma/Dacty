@@ -17,7 +17,8 @@ function Card({ label, value }: { label: string; value: string }) {
 export function StatsPage() {
   const [runs, setRuns] = useState<RunRecord[] | null>(null);
   useEffect(() => {
-    void allRuns().then(setRuns);
+    // IndexedDB indisponible : tableau vide → états « aucune donnée » déjà prévus
+    void allRuns().then(setRuns).catch(() => setRuns([]));
   }, []);
 
   if (!runs) return null;

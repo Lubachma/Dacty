@@ -62,4 +62,14 @@ describe('runStore', () => {
     expect(typing?.cursor).toBe(1);
     expect(typing?.statuses[1]).toBe('pending');
   });
+
+  it("l'auto-indentation ne gonfle ni les frappes ni les événements", () => {
+    useRunStore.getState().start(config, 'a\n    b');
+    useRunStore.getState().key('a');
+    useRunStore.getState().key('\n');
+    const typing = useRunStore.getState().typing;
+    // seules les vraies frappes ('a' et '\n') comptent pour la précision et la timeline
+    expect(typing?.keystrokes).toBe(2);
+    expect(typing?.events).toHaveLength(2);
+  });
 });
