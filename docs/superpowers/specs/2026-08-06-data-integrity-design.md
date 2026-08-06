@@ -98,5 +98,5 @@ table `achievements`, migration/réparation des données existantes, validation 
 
 ## Vérification
 
-1. `npm run test` : 125 → 140 tests verts.
+1. `npm run test` : 125 → 141 tests verts.
 2. `npm run build` : tsc + vite verts.

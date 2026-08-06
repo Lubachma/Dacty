@@ -36,7 +36,7 @@ Spec : `docs/superpowers/specs/2026-08-06-data-integrity-design.md`
 - Produces: `runRecordSchema: z.ZodObject<...>` dont `z.infer` est structurellement
   assignable à `RunRecord` (`src/db/types.ts`). Consommé par la Task 2.
 
-- [ ] **Step 1: Écrire le test qui échoue** — `src/db/schemas.test.ts`
+- [x] **Step 1: Écrire le test qui échoue** — `src/db/schemas.test.ts`
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -86,12 +86,12 @@ describe('runRecordSchema', () => {
 });
 ```
 
-- [ ] **Step 2: Vérifier que le test échoue**
+- [x] **Step 2: Vérifier que le test échoue**
 
 Run: `npx vitest run src/db/schemas.test.ts`
 Expected: FAIL — `runRecordSchema` n'existe pas dans `./schemas`.
 
-- [ ] **Step 3: Implémenter le schéma** — ajouter à `src/db/schemas.ts` (après
+- [x] **Step 3: Implémenter le schéma** — ajouter à `src/db/schemas.ts` (après
 `languageSchema`, le fichier importe déjà `z`) :
 
 ```ts
@@ -122,12 +122,12 @@ export const runRecordSchema = z.object({
 });
 ```
 
-- [ ] **Step 4: Vérifier que le test passe**
+- [x] **Step 4: Vérifier que le test passe**
 
 Run: `npx vitest run src/db/schemas.test.ts`
 Expected: 9 tests PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/db/schemas.ts src/db/schemas.test.ts
@@ -147,7 +147,7 @@ git commit -m "feat: zod schema for run records"
 - Produces: `allRuns()`, `topRuns()`, `personalBests()` ne retournent plus que des
   `RunRecord` validés (signatures inchangées). `parseRuns` reste interne (non exporté).
 
-- [ ] **Step 1: Écrire les tests qui échouent** — dans `src/db/runsRepo.test.ts`,
+- [x] **Step 1: Écrire les tests qui échouent** — dans `src/db/runsRepo.test.ts`,
 remplacer la ligne d'import vitest par :
 
 ```ts
@@ -178,12 +178,12 @@ et ajouter ces tests dans le `describe('runsRepo')` :
   });
 ```
 
-- [ ] **Step 2: Vérifier que les tests échouent**
+- [x] **Step 2: Vérifier que les tests échouent**
 
 Run: `npx vitest run src/db/runsRepo.test.ts`
 Expected: FAIL — les 2 nouveaux tests voient la ligne corrompue (`[1000, 3000]`, wpm 999).
 
-- [ ] **Step 3: Implémenter `parseRuns` et l'appliquer** — dans `src/db/runsRepo.ts` :
+- [x] **Step 3: Implémenter `parseRuns` et l'appliquer** — dans `src/db/runsRepo.ts` :
 
 Ajouter l'import :
 
@@ -253,12 +253,12 @@ export async function personalBests(): Promise<{
 
 (`rankFor` reste tel quel : il ne retourne qu'un compteur, voir spec.)
 
-- [ ] **Step 4: Vérifier que les tests passent**
+- [x] **Step 4: Vérifier que les tests passent**
 
 Run: `npx vitest run src/db/runsRepo.test.ts`
 Expected: 9 tests PASS (7 existants + 2 nouveaux).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/db/runsRepo.ts src/db/runsRepo.test.ts
@@ -278,7 +278,7 @@ git commit -m "feat: validate runs with zod at read time, drop corrupted rows"
   mais rejette sans rien persister si une étape échoue. `runStore` consomme déjà ce rejet
   (toast « Sauvegarde impossible »), rien à changer côté appelant.
 
-- [ ] **Step 1: Écrire le test qui échoue** — dans `src/game/runFlow.test.ts`, remplacer
+- [x] **Step 1: Écrire le test qui échoue** — dans `src/game/runFlow.test.ts`, remplacer
 la ligne d'import vitest par :
 
 ```ts
@@ -298,14 +298,14 @@ et ajouter ce test dans le `describe('completeRun')` :
   });
 ```
 
-- [ ] **Step 2: Vérifier que le test échoue**
+- [x] **Step 2: Vérifier que le test échoue**
 
 Run: `npx vitest run src/game/runFlow.test.ts`
 Expected: FAIL — sans transaction, la run ET la progression challenger sont persistées
 avant que `unlockNew` n'échoue (`allRuns()` retourne 1 ligne, `db.challenger.get('fr')`
 existe). C'est le comportement non atomique actuel.
 
-- [ ] **Step 3: Envelopper dans une transaction** — dans `src/game/runFlow.ts` :
+- [x] **Step 3: Envelopper dans une transaction** — dans `src/game/runFlow.ts` :
 
 Ajouter l'import :
 
@@ -361,12 +361,12 @@ Toutes les opérations de la callback sont Dexie ou synchrones (`getOfficialText
 `wpmTimeline`) : pas de `await` externe, la transaction reste vivante (pas de
 « PrematureCommit »).
 
-- [ ] **Step 4: Vérifier que les tests passent**
+- [x] **Step 4: Vérifier que les tests passent**
 
 Run: `npx vitest run src/game/runFlow.test.ts src/state/runStore.test.ts src/state/runStore.fallback.test.ts`
 Expected: tous PASS (5 existants runFlow + 1 nouveau, stores intacts).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/game/runFlow.ts src/game/runFlow.test.ts
@@ -386,7 +386,7 @@ git commit -m "feat: make completeRun atomic with a single Dexie transaction"
 - Produces: `ErrorBoundary` — props `{ children: ReactNode; resetKey: string }`.
   Consommé par `Layout` avec `resetKey = useLocation().pathname`.
 
-- [ ] **Step 1: Écrire le test qui échoue** — `src/ui/components/ErrorBoundary.test.tsx`
+- [x] **Step 1: Écrire le test qui échoue** — `src/ui/components/ErrorBoundary.test.tsx`
 
 ```tsx
 import { render, screen } from '@testing-library/react';
@@ -461,12 +461,12 @@ describe('ErrorBoundary', () => {
 });
 ```
 
-- [ ] **Step 2: Vérifier que le test échoue**
+- [x] **Step 2: Vérifier que le test échoue**
 
 Run: `npx vitest run src/ui/components/ErrorBoundary.test.tsx`
 Expected: FAIL — `./ErrorBoundary` n'existe pas.
 
-- [ ] **Step 3: Implémenter le composant** — `src/ui/components/ErrorBoundary.tsx`
+- [x] **Step 3: Implémenter le composant** — `src/ui/components/ErrorBoundary.tsx`
 
 ```tsx
 import { Component, type ErrorInfo, type ReactNode } from 'react';
@@ -527,7 +527,7 @@ export class ErrorBoundary extends Component<Props, State> {
 }
 ```
 
-- [ ] **Step 4: Brancher dans `Layout.tsx`** — le fichier complet devient :
+- [x] **Step 4: Brancher dans `Layout.tsx`** — le fichier complet devient :
 
 ```tsx
 import { Suspense, useEffect, useState } from 'react';
@@ -572,12 +572,12 @@ export function Layout() {
 ```
 
 
-- [ ] **Step 5: Vérifier que les tests passent**
+- [x] **Step 5: Vérifier que les tests passent**
 
 Run: `npx vitest run src/ui/components/ErrorBoundary.test.tsx src/ui/components/Layout.test.tsx src/App.test.tsx`
 Expected: tous PASS (3 nouveaux + existants intacts).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/ui/components/ErrorBoundary.tsx src/ui/components/ErrorBoundary.test.tsx src/ui/components/Layout.tsx
@@ -588,17 +588,17 @@ git commit -m "feat: route-level ErrorBoundary with retry and home link"
 
 ### Task 5: Vérification finale
 
-- [ ] **Step 1: Suite complète**
+- [x] **Step 1: Suite complète**
 
 Run: `npm run test`
 Expected: 140 tests PASS (125 existants + 15 nouveaux).
 
-- [ ] **Step 2: Build**
+- [x] **Step 2: Build**
 
 Run: `npm run build`
 Expected: `tsc --noEmit` et `vite build` verts (validateur corpus inclus en prebuild).
 
-- [ ] **Step 3: Cocher les cases du plan et commit final si nécessaire**
+- [x] **Step 3: Cocher les cases du plan et commit final si nécessaire**
 
 ```bash
 git add docs/superpowers/plans/2026-08-06-data-integrity.md
