@@ -1,11 +1,13 @@
 import { Suspense, useEffect, useState } from 'react';
-import { Outlet } from 'react-router';
+import { Outlet, useLocation } from 'react-router';
+import { ErrorBoundary } from './ErrorBoundary';
 import { Header } from './Header';
 import { ToastHost } from './ToastHost';
 import { checkPersistence, requestPersistence } from '@/db/persistence';
 
 export function Layout() {
   const [persistent, setPersistent] = useState(true);
+  const location = useLocation();
   useEffect(() => {
     let active = true;
     void requestPersistence();
@@ -25,9 +27,11 @@ export function Layout() {
         </div>
       )}
       <main className="mx-auto max-w-5xl px-4 py-8">
-        <Suspense fallback={<p className="py-16 text-center text-muted">Chargement…</p>}>
-          <Outlet />
-        </Suspense>
+        <ErrorBoundary resetKey={location.pathname}>
+          <Suspense fallback={<p className="py-16 text-center text-muted">Chargement…</p>}>
+            <Outlet />
+          </Suspense>
+        </ErrorBoundary>
       </main>
       <ToastHost />
     </div>
