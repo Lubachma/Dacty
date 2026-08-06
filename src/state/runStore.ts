@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import {
   createRun, isFinished, pauseRun, pressBackspace, resumeRun, typeChar,
 } from '@/engine/typingEngine';
+import { nowMs } from '@/engine/clock';
 import { wpmTimeline } from '@/engine/stats';
 import type { TypingState } from '@/engine/types';
 import { buildRunRecord, completeRun, type RunConfig, type RunResult } from '@/game/runFlow';
@@ -40,13 +41,13 @@ export const useRunStore = create<RunStore>((set, get) => ({
   key(char) {
     const { typing, config, status } = get();
     if (!typing || !config || status !== 'running') return;
-    let next = typeChar(typing, char, Date.now());
+    let next = typeChar(typing, char, nowMs());
     if (next === typing) return;
     // auto-indentation : après un saut de ligne correct, tape les espaces attendus
     // (frappes synthétiques : ne comptent ni dans les frappes ni dans la timeline)
     if (char === '\n' && next.statuses[next.cursor - 1] === 'correct') {
       while (next.text[next.cursor] === ' ' && !isFinished(next)) {
-        next = typeChar(next, ' ', Date.now(), true);
+        next = typeChar(next, ' ', nowMs(), true);
       }
     }
     if (isFinished(next)) {
@@ -86,20 +87,20 @@ export const useRunStore = create<RunStore>((set, get) => ({
   backspace() {
     const { typing, status } = get();
     if (!typing || status !== 'running') return;
-    const next = pressBackspace(typing, Date.now());
+    const next = pressBackspace(typing, nowMs());
     if (next !== typing) set({ typing: next });
   },
 
   pause() {
     const { typing, status } = get();
     if (!typing || status !== 'running') return;
-    set({ typing: pauseRun(typing, Date.now()), status: 'paused' });
+    set({ typing: pauseRun(typing, nowMs()), status: 'paused' });
   },
 
   resume() {
     const { typing, status } = get();
     if (!typing || status !== 'paused') return;
-    set({ typing: resumeRun(typing, Date.now()), status: 'running' });
+    set({ typing: resumeRun(typing, nowMs()), status: 'running' });
   },
 
   invalidate() {

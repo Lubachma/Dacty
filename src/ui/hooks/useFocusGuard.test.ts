@@ -44,10 +44,12 @@ describe('useFocusGuard', () => {
     expect(useRunStore.getState().status).toBe('paused');
 
     // onglet caché : le setTimeout d'invalidation n'a pas tourné (throttlé),
-    // mais l'horloge système a avancé au-delà du délai
-    act(() => { vi.setSystemTime(Date.now() + 10_000); });
+    // mais l'horloge monotone a avancé au-delà du délai
+    const shifted = performance.now() + 10_000;
+    const clock = vi.spyOn(performance, 'now').mockReturnValue(shifted);
     act(() => { window.dispatchEvent(new Event('focus')); });
     expect(useRunStore.getState().status).toBe('invalidated');
+    clock.mockRestore();
     vi.useRealTimers();
   });
 

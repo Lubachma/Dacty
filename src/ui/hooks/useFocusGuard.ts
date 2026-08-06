@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useRunStore } from '@/state/runStore';
 import { useSettings } from '@/state/settingsStore';
+import { nowMs } from '@/engine/clock';
 
 /** Pause au blur de la fenêtre ; invalide la run si le focus ne revient pas sous `focusTimeoutSec`. */
 export function useFocusGuard(): void {
@@ -23,10 +24,10 @@ export function useFocusGuard(): void {
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = null;
       // les timers sont throttlés quand l'onglet est caché : le setTimeout
-      // d'invalidation peut ne pas avoir tourné. On tranche depuis l'heure
-      // réelle du début de pause.
+      // d'invalidation peut ne pas avoir tourné. On tranche depuis l'horloge
+      // monotone du début de pause (même origine que pauseStartedAt).
       const pausedAt = useRunStore.getState().typing?.pauseStartedAt;
-      if (pausedAt != null && Date.now() - pausedAt > timeoutSec * 1000) invalidate();
+      if (pausedAt != null && nowMs() - pausedAt > timeoutSec * 1000) invalidate();
       else resume();
     };
     // mobile : verrouillage/bascule d'app émet visibilitychange sans blur fiable

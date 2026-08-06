@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { computeAccuracy, liveWpm } from '@/engine/stats';
 import { elapsedMs } from '@/engine/typingEngine';
+import { nowMs } from '@/engine/clock';
 import type { TypingState } from '@/engine/types';
 
 function Cell({ label, value }: { label: string; value: string }) {
@@ -19,7 +20,7 @@ export function RunHud({ typing, live = true }: { typing: TypingState; live?: bo
     const id = setInterval(() => setTick((t) => t + 1), 500);
     return () => clearInterval(id);
   }, [live]);
-  const now = Date.now();
+  const now = nowMs();
   const wpm = liveWpm(typing, now);
   const accuracy = computeAccuracy(typing.keystrokes, typing.errors);
   const seconds = elapsedMs(typing, now) / 1000;
