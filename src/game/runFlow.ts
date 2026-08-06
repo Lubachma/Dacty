@@ -51,6 +51,12 @@ export function buildRunRecord(state: TypingState, config: RunConfig, now: numbe
   };
 }
 
+/**
+ * `now` est l'horloge MURALE (Date.now) : elle date le record (streaks, stats par jour).
+ * La durée vient des timestamps moteur (horloge monotone, voir @/engine/clock) via
+ * `finishedAt` — toujours renseigné sur une run terminée : le repli `?? now`
+ * d'`elapsedMs` et ceux de `wpmTimeline` ne servent pas sur ce chemin.
+ */
 export async function completeRun(state: TypingState, config: RunConfig, now: number): Promise<RunResult> {
   const run = buildRunRecord(state, config, now);
   const { durationMs, wpm, accuracy, points } = run;

@@ -35,7 +35,7 @@ Spec : `docs/superpowers/specs/2026-08-06-monotonic-clock-design.md`
 **Interfaces:**
 - Produces: `nowMs(): number` — horloge monotone. Consommé par Task 2.
 
-- [ ] **Step 1: Écrire le test qui échoue** — `src/engine/clock.test.ts`
+- [x] **Step 1: Écrire le test qui échoue** — `src/engine/clock.test.ts`
 
 ```ts
 import { describe, expect, it } from 'vitest';
@@ -54,12 +54,12 @@ describe('nowMs', () => {
 });
 ```
 
-- [ ] **Step 2: Vérifier que le test échoue**
+- [x] **Step 2: Vérifier que le test échoue**
 
 Run: `npx vitest run src/engine/clock.test.ts`
 Expected: FAIL — `./clock` n'existe pas.
 
-- [ ] **Step 3: Implémenter le module** — `src/engine/clock.ts`
+- [x] **Step 3: Implémenter le module** — `src/engine/clock.ts`
 
 ```ts
 /**
@@ -72,12 +72,12 @@ Expected: FAIL — `./clock` n'existe pas.
 export const nowMs = (): number => performance.now();
 ```
 
-- [ ] **Step 4: Vérifier que le test passe**
+- [x] **Step 4: Vérifier que le test passe**
 
 Run: `npx vitest run src/engine/clock.test.ts`
 Expected: 1 test PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/engine/clock.ts src/engine/clock.test.ts
@@ -103,7 +103,7 @@ même exigence de cohérence.
 - Consumes: `nowMs(): number` (Task 1).
 - Produces: signatures publiques inchangées (`useRunStore`, `RunHud`, `useFocusGuard`).
 
-- [ ] **Step 1: Adapter le test du focus guard (rouge)** — dans
+- [x] **Step 1: Adapter le test du focus guard (rouge)** — dans
 `src/ui/hooks/useFocusGuard.test.ts`, remplacer le 2ᵉ test par :
 
 ```ts
@@ -127,14 +127,14 @@ même exigence de cohérence.
   });
 ```
 
-- [ ] **Step 2: Vérifier que le test échoue**
+- [x] **Step 2: Vérifier que le test échoue**
 
 Run: `npx vitest run src/ui/hooks/useFocusGuard.test.ts`
 Expected: FAIL sur ce test uniquement — le code utilise encore `Date.now()`, insensible
 au spy sur `performance.now` : la garde reprend au lieu d'invalider. (Les tests 1 et 3
 restent verts.)
 
-- [ ] **Step 3: Basculer les trois fichiers sur `nowMs()`**
+- [x] **Step 3: Basculer les trois fichiers sur `nowMs()`**
 
 `src/state/runStore.ts` — ajouter l'import et remplacer 5 appels (lignes 43, 49, 89, 96,
 102 ; ceux des lignes 56 et 64 RESTENT `Date.now()` — date murale du record) :
@@ -188,12 +188,12 @@ import { nowMs } from '@/engine/clock';
       if (pausedAt != null && nowMs() - pausedAt > timeoutSec * 1000) invalidate();
 ```
 
-- [ ] **Step 4: Vérifier que les tests passent**
+- [x] **Step 4: Vérifier que les tests passent**
 
 Run: `npx vitest run src/ui/hooks/useFocusGuard.test.ts src/state/runStore.test.ts src/state/runStore.fallback.test.ts src/game/runFlow.test.ts`
 Expected: tous PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/state/runStore.ts src/ui/components/RunHud.tsx src/ui/hooks/useFocusGuard.ts src/ui/hooks/useFocusGuard.test.ts
@@ -207,7 +207,7 @@ git commit -m "feat: measure run durations on the monotonic clock"
 **Files:**
 - Modify: `src/game/runFlow.ts` (commentaire uniquement)
 
-- [ ] **Step 1: Documenter le contrat** — au-dessus de `completeRun` dans
+- [x] **Step 1: Documenter le contrat** — au-dessus de `completeRun` dans
 `src/game/runFlow.ts` :
 
 ```ts
@@ -219,17 +219,17 @@ git commit -m "feat: measure run durations on the monotonic clock"
  */
 ```
 
-- [ ] **Step 2: Suite complète**
+- [x] **Step 2: Suite complète**
 
 Run: `npm run test`
 Expected: 142 tests PASS (141 + 1 nouveau).
 
-- [ ] **Step 3: Build**
+- [x] **Step 3: Build**
 
 Run: `npm run build`
 Expected: `tsc --noEmit` et `vite build` verts.
 
-- [ ] **Step 4: Vérifier qu'il ne reste que des `Date.now()` muraux**
+- [x] **Step 4: Vérifier qu'il ne reste que des `Date.now()` muraux**
 
 Run: `grep -rn "Date\.now()" src --include="*.ts" --include="*.tsx" | grep -v test`
 Expected: uniquement `profileRepo.ts` (×2), `runStore.ts` (×2 : lignes du `completeRun`
@@ -237,7 +237,7 @@ et du fallback), `achievements/check.ts` (×2), `ui/pages/statsUtils.ts`,
 `ui/pages/AchievementsPage.tsx` (×2), `ui/pages/StatsPage.tsx`. Aucun dans `RunHud.tsx`
 ni `useFocusGuard.ts`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/game/runFlow.ts
