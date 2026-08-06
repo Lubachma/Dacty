@@ -1,5 +1,5 @@
 import 'fake-indexeddb/auto';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { db } from './db';
 import { allRuns, personalBests, rankFor, runCount, saveRun, topRuns } from './runsRepo';
 import type { RunRecord } from './types';
@@ -62,5 +62,25 @@ describe('runsRepo', () => {
     expect(bests.bestWpm?.wpm).toBe(70);
     expect(bests.bestAccuracy?.accuracy).toBe(0.9);
     expect(bests.longestRun?.chars).toBe(300);
+  });
+
+  it('écarte les lignes corrompues à la lecture, avec avertissement', async () => {
+    await saveRun(makeRun({}));
+    // IndexedDB est modifiable hors de l'app : insertion brute d'une ligne invalide
+    await db.runs.add({ ...makeRun({ date: 3000 }), wpm: 'rapide' } as unknown as RunRecord);
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    expect((await allRuns()).map((r) => r.date)).toEqual([1000]);
+    expect(warn).toHaveBeenCalledOnce();
+    warn.mockRestore();
+  });
+
+  it('topRuns et personalBests ignorent les lignes corrompues', async () => {
+    await saveRun(makeRun({ wpm: 50 }));
+    // sans validation, cette ligne gagnerait le record de wpm
+    await db.runs.add({ ...makeRun({}), wpm: 999, accuracy: 'bof' } as unknown as RunRecord);
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    expect((await topRuns({ mode: 'free', language: 'fr' })).map((r) => r.wpm)).toEqual([50]);
+    expect((await personalBests()).bestWpm?.wpm).toBe(50);
+    vi.restoreAllMocks();
   });
 });
