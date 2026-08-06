@@ -4,6 +4,7 @@ import { computeAccuracy, computeWpm, wpmTimeline } from '@/engine/stats';
 import { challengerPoints } from '@/scoring/points';
 import type { Tier } from '@/scoring/league';
 import type { ChallengerProgress, GameMode, RunRecord } from '@/db/types';
+import { db } from '@/db/db';
 import { personalBests, saveRun } from '@/db/runsRepo';
 import { recordChallengerResult } from '@/db/challengerRepo';
 import { getOfficialTexts } from '@/texts/corpus';
@@ -54,34 +55,38 @@ export async function completeRun(state: TypingState, config: RunConfig, now: nu
   const run = buildRunRecord(state, config, now);
   const { durationMs, wpm, accuracy, points } = run;
 
-  const bests = await personalBests();
-  const newRecords: RecordKind[] = [];
-  if (bests.bestWpm === null) {
-    newRecords.push('wpm', 'accuracy', 'longest');
-  } else {
-    if (wpm > bests.bestWpm.wpm) newRecords.push('wpm');
-    if (durationMs >= 10_000 && accuracy > (bests.bestAccuracy?.accuracy ?? 0)) {
-      newRecords.push('accuracy');
+  // une seule transaction rw sur les 3 tables : run, progression challenger et succès
+  // sont persistés ensemble ou pas du tout — jamais d'état partiel si une étape échoue
+  return db.transaction('rw', [db.runs, db.challenger, db.achievements], async () => {
+    const bests = await personalBests();
+    const newRecords: RecordKind[] = [];
+    if (bests.bestWpm === null) {
+      newRecords.push('wpm', 'accuracy', 'longest');
+    } else {
+      if (wpm > bests.bestWpm.wpm) newRecords.push('wpm');
+      if (durationMs >= 10_000 && accuracy > (bests.bestAccuracy?.accuracy ?? 0)) {
+        newRecords.push('accuracy');
+      }
+      if (state.text.length > (bests.longestRun?.chars ?? 0)) newRecords.push('longest');
     }
-    if (state.text.length > (bests.longestRun?.chars ?? 0)) newRecords.push('longest');
-  }
 
-  const id = await saveRun(run);
-  run.id = id;
+    const id = await saveRun(run);
+    run.id = id;
 
-  let tierUp: Tier | null = null;
-  let progress: ChallengerProgress | null = null;
-  if (config.mode === 'challenger') {
-    const officialIds = getOfficialTexts(config.language).map((t) => t.id);
-    const r = await recordChallengerResult(config.language, config.textId, points, now, officialIds);
-    tierUp = r.tierUp;
-    progress = r.progress;
-  }
+    let tierUp: Tier | null = null;
+    let progress: ChallengerProgress | null = null;
+    if (config.mode === 'challenger') {
+      const officialIds = getOfficialTexts(config.language).map((t) => t.id);
+      const r = await recordChallengerResult(config.language, config.textId, points, now, officialIds);
+      tierUp = r.tierUp;
+      progress = r.progress;
+    }
 
-  const ctx = await buildContext(run);
-  const newAchievements = await unlockNew(ctx);
+    const ctx = await buildContext(run);
+    const newAchievements = await unlockNew(ctx);
 
-  const timeline = wpmTimeline(state.events, state.startedAt ?? now, state.finishedAt ?? now);
+    const timeline = wpmTimeline(state.events, state.startedAt ?? now, state.finishedAt ?? now);
 
-  return { run, timeline, newAchievements, tierUp, progress, newRecords };
+    return { run, timeline, newAchievements, tierUp, progress, newRecords };
+  });
 }

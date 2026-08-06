@@ -1,5 +1,5 @@
 import 'fake-indexeddb/auto';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { db } from '@/db/db';
 import { createRun, typeChar } from '@/engine/typingEngine';
 import { completeRun, type RunConfig } from './runFlow';
@@ -68,5 +68,14 @@ describe('completeRun', () => {
     expect(result.tierUp).toBe('bronze');
     expect(result.newAchievements.map((a) => a.id)).toContain('enter-league');
     expect(result.newAchievements.map((a) => a.id)).toContain('wpm-140');
+  });
+
+  it('est atomique : si la persistance échoue, rien n\'est enregistré', async () => {
+    const c: RunConfig = { ...config, mode: 'challenger', textId: 'fr-101' };
+    // unlockNew appelle bulkAdd même sans succès frais : l'échec est garanti
+    vi.spyOn(db.achievements, 'bulkAdd').mockRejectedValueOnce(new Error('boom'));
+    await expect(completeRun(finishClean('abcdefghij'), c, 9999)).rejects.toThrow('boom');
+    expect(await allRuns()).toHaveLength(0); // la run est annulée…
+    expect(await db.challenger.get('fr')).toBeUndefined(); // …la progression aussi
   });
 });
