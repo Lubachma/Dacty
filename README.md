@@ -1,86 +1,90 @@
 <div align="center">
 
+🇫🇷 <a href="README.fr.md">Version française disponible ici</a>
+
 # ⌨️ Dacty
 
-**Le speedrun dactylo.** Tape des textes le plus vite possible, grimpe la ligue Challenger, débloque les succès.
+**The typing speedrun trainer.** Type texts as fast as you can, climb the Challenger league, unlock achievements.
 
-100 % local — tes données restent dans ton navigateur (IndexedDB).
+100 % local — your data stays in your browser (IndexedDB). The app UI is currently in French.
 
 [![CI](https://github.com/Lubachma/Dacty/actions/workflows/ci.yml/badge.svg)](https://github.com/Lubachma/Dacty/actions/workflows/ci.yml)
-[![Licence MIT](https://img.shields.io/badge/licence-MIT-green.svg)](LICENSE)
+[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ![React](https://img.shields.io/badge/React_19-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_4-06B6D4?logo=tailwindcss&logoColor=white)
 
-![Démo de Dacty — configuration, frappe en direct et écran de résultats](docs/assets/demo.gif)
+![Dacty demo — setup, live typing and results screen](docs/assets/demo.gif)
 
 </div>
 
-## ✨ Modes de jeu
+## ✨ Game modes
 
 | Mode | Description |
 |------|-------------|
-| 🎯 **Entraînement libre** — `/play` | Texte au choix (français/anglais, court/moyen/long/citation) avec toggles de difficulté : ponctuation, caractères spéciaux, chiffres, accents |
-| 💻 **Mode Dev** — `/dev` | Tape du code C ou Python (extraits, fonctions, programmes complets). Code brut, multiplicateur ×1,4, Entrée valide les sauts de ligne, indentation automatique |
-| 🏆 **Challenger** — `/challenger` | La ranked : 10 textes officiels par langue (français, anglais) **et** par langage (C, Python), conditions officielles |
-| 🏅 **Succès** — `/achievements` | 28 succès en 6 catégories |
-| 📊 **Classements** — `/leaderboard` | Top 10 local par mode/langue/texte + records personnels |
-| 📈 **Stats** — `/stats` | WPM et précision moyens sur 30 jours, séries de jeu |
+| 🎯 **Free practice** — `/play` | Pick a text (French/English, short/medium/long/quote) with difficulty toggles: punctuation, special characters, digits, accents |
+| 💻 **Dev mode** — `/dev` | Type C or Python code (snippets, functions, full programs). Raw code, ×1.4 multiplier, Enter validates line breaks, automatic indentation |
+| 🏆 **Challenger** — `/challenger` | The ranked mode: 10 official texts per language (French, English) **and** per programming language (C, Python), official conditions |
+| 🏅 **Achievements** — `/achievements` | 28 achievements in 6 categories |
+| 📊 **Leaderboards** — `/leaderboard` | Local top 10 per mode/language/text + personal records |
+| 📈 **Stats** — `/stats` | Average WPM and accuracy over 30 days, play streaks |
 
-### Ligues Challenger
+### Challenger leagues
 
-Points = `WPM × précision² × 1,4` — le total de tes meilleurs scores détermine ton tier :
+Points = `WPM × accuracy² × 1.4` — the total of your best scores sets your tier:
 
-🥉 Bronze (100) → 🥈 Argent (400) → 🥇 Or (750) → 💠 Platine (950) → 💎 Diamant (1100) → 👑 Challenger (1300)
+🥉 Bronze (100) → 🥈 Silver (400) → 🥇 Gold (750) → 💠 Platinum (950) → 💎 Diamond (1100) → 👑 Challenger (1300)
 
-## 🚀 Démarrage rapide
+## 🚀 Quick start
 
 ```bash
 npm install
 npm run dev        # http://localhost:5173
 ```
 
-Node.js ≥ 20 requis.
+Requires Node.js ≥ 20.
 
-## 🎮 Règles de frappe
+## 🎮 Typing rules
 
-- ⏱️ Le chrono démarre à la première touche — WPM = (caractères / 5) / minutes
-- ⌫ Backspace autorisé, mais chaque erreur compte dans la précision finale, même corrigée
-- ✅ Il faut un texte 100 % exact pour finir
-- 📋 Collage bloqué
-- 👁️ Perte de focus > 5 s (configurable) = run invalidée
+- ⏱️ The timer starts on the first keystroke — WPM = (characters / 5) / minutes
+- ⌫ Backspace allowed, but every error counts toward final accuracy, even if corrected
+- ✅ The text must be 100 % exact to finish
+- 📋 Pasting is blocked
+- 👁️ Losing window focus for > 5 s (configurable) invalidates the run
 
 ## 🛠️ Stack
 
-Vite + React 19 + TypeScript strict · Tailwind CSS v4 · Framer Motion · Zustand · Dexie (IndexedDB) · Vitest + Testing Library
+Vite + React 19 + strict TypeScript · Tailwind CSS v4 · Framer Motion · Zustand · Dexie (IndexedDB) · Vitest + Testing Library
 
-Le moteur de frappe (`src/engine/`) est du pur TypeScript, sans dépendance React.
+The typing engine (`src/engine/`) is pure TypeScript, with no React dependency.
 
 ## 📜 Scripts
 
-| Commande | Rôle |
-|----------|------|
-| `npm run dev` | Serveur de dev |
-| `npm test` | Tests unitaires (Vitest) |
-| `npm run build` | Validation du corpus + build de production (`dist/`) |
-| `npm run validate:corpus` | Valide les textes (longueurs, ids, ponctuation) |
+| Command | Role |
+|---------|------|
+| `npm run dev` | Dev server |
+| `npm test` | Unit tests (Vitest) |
+| `npm run build` | Corpus validation + production build (`dist/`) |
+| `npm run validate:corpus` | Validates the texts (lengths, ids, punctuation) |
 
 ## 📁 Structure
 
 ```
 src/
-├── engine/        # machine à états de frappe + stats (pur, testé)
-├── texts/         # corpus fr/en + code C/Python (JSON) + normalisation
-├── scoring/       # points Challenger + tiers de ligue
-├── db/            # Dexie : runs, profil, succès, progression Challenger
-├── achievements/  # 28 succès déclaratifs + moteur de déblocage
-├── game/          # orchestration de fin de run
-├── state/         # stores Zustand (run, settings, toasts)
-└── ui/            # composants et pages
+├── engine/        # typing state machine + stats (pure, tested)
+├── texts/         # fr/en corpus + C/Python code (JSON) + toggle normalization
+├── scoring/       # Challenger points + league tiers
+├── db/            # Dexie: runs, profile, achievements, Challenger progression
+├── achievements/  # 28 declarative achievements + unlock engine
+├── game/          # end-of-run orchestration
+├── state/         # Zustand stores (run, settings, toasts)
+└── ui/            # components and pages
 ```
 
-## 📄 Licence
+Design docs and specs (in French) live in [`docs/superpowers/`](docs/superpowers/).
 
-MIT — voir [LICENSE](LICENSE).
+## 📄 License
+
+MIT — see [LICENSE](LICENSE).
