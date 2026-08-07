@@ -3,6 +3,7 @@ import { useRunStore } from '@/state/runStore';
 import { useSettings } from '@/state/settingsStore';
 import { useToasts } from '@/state/toastStore';
 import { useFocusGuard } from '@/ui/hooks/useFocusGuard';
+import { usePauseRunOnUnmount } from '@/ui/hooks/usePauseRunOnUnmount';
 import { TypingArea } from '@/ui/components/TypingArea';
 import { RunHud } from '@/ui/components/RunHud';
 import { ResultsScreen } from '@/ui/components/ResultsScreen';
@@ -25,6 +26,7 @@ export function DevPage() {
   const [language, setLanguage] = useState<Language>('python');
   const [length, setLength] = useState<TextLength>('short');
   useFocusGuard();
+  usePauseRunOnUnmount();
 
   useEffect(() => {
     if (!result) return;

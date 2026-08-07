@@ -3,6 +3,7 @@ import { useRunStore } from '@/state/runStore';
 import { useSettings } from '@/state/settingsStore';
 import { useToasts } from '@/state/toastStore';
 import { useFocusGuard } from '@/ui/hooks/useFocusGuard';
+import { usePauseRunOnUnmount } from '@/ui/hooks/usePauseRunOnUnmount';
 import { TypingArea } from '@/ui/components/TypingArea';
 import { RunHud } from '@/ui/components/RunHud';
 import { ResultsScreen } from '@/ui/components/ResultsScreen';
@@ -34,6 +35,7 @@ export function PlayPage() {
   const [length, setLength] = useState<TextLength | 'quote'>('short');
   const [options, setOptions] = useState<TextOptions>(ALL_OPTIONS_ON);
   useFocusGuard();
+  usePauseRunOnUnmount();
 
   useEffect(() => {
     setLanguage(profile.defaultLanguage);

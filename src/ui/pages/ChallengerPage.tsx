@@ -3,6 +3,7 @@ import { useRunStore } from '@/state/runStore';
 import { useToasts } from '@/state/toastStore';
 import { useSettings } from '@/state/settingsStore';
 import { useFocusGuard } from '@/ui/hooks/useFocusGuard';
+import { usePauseRunOnUnmount } from '@/ui/hooks/usePauseRunOnUnmount';
 import { TypingArea } from '@/ui/components/TypingArea';
 import { RunHud } from '@/ui/components/RunHud';
 import { ResultsScreen } from '@/ui/components/ResultsScreen';
@@ -61,6 +62,7 @@ export function ChallengerPage() {
   const [language, setLanguage] = useState<Language>(profile.defaultLanguage);
   const [progress, setProgress] = useState<ChallengerProgress | null>(null);
   useFocusGuard();
+  usePauseRunOnUnmount();
 
   useEffect(() => {
     setLanguage(profile.defaultLanguage);
