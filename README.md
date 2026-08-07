@@ -45,3 +45,7 @@ Vite + React 19 + TypeScript strict, Tailwind CSS v4, Framer Motion, Zustand, De
 - `src/game/` — orchestration de fin de run
 - `src/state/` — stores Zustand (run, settings, toasts)
 - `src/ui/` — composants et pages
+
+## Licence
+
+MIT — voir [LICENSE](LICENSE).
