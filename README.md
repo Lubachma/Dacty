@@ -14,6 +14,8 @@
 ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_4-06B6D4?logo=tailwindcss&logoColor=white)
 
+![Démo de Dacty — configuration, frappe en direct et écran de résultats](docs/assets/demo.gif)
+
 </div>
 
 ## ✨ Modes de jeu
