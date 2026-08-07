@@ -1,13 +1,15 @@
 import { db } from './db';
 import { profileSchema } from './schemas';
 import type { Profile } from './types';
+import { detectUiLanguage } from '@/i18n/detect';
 
 export const DEFAULT_PROFILE: Profile = {
   id: 'default',
-  pseudo: 'Joueur',
+  pseudo: detectUiLanguage() === 'fr' ? 'Joueur' : 'Player',
   theme: 'dark',
   sounds: true,
   defaultLanguage: 'en',
+  uiLanguage: detectUiLanguage(),
   focusTimeoutSec: 5,
   createdAt: 0,
   lastActiveAt: 0,

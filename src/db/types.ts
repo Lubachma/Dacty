@@ -1,5 +1,6 @@
 import type { Language, TextOptions } from '@/texts/types';
 import type { Tier } from '@/scoring/league';
+import type { UiLanguage } from '@/i18n/types';
 
 export type GameMode = 'free' | 'challenger';
 
@@ -27,6 +28,8 @@ export interface Profile {
   theme: 'dark' | 'light';
   sounds: boolean;
   defaultLanguage: Language;
+  /** langue de l'interface, indépendante de la langue des textes */
+  uiLanguage: UiLanguage;
   focusTimeoutSec: number;
   createdAt: number;
   lastActiveAt: number;

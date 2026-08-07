@@ -7,6 +7,10 @@ export function applyTheme(theme: 'dark' | 'light'): void {
   document.documentElement.dataset.theme = theme;
 }
 
+export function applyUiLanguage(lang: 'fr' | 'en'): void {
+  document.documentElement.lang = lang;
+}
+
 interface SettingsStore {
   profile: Profile;
   loaded: boolean;
@@ -25,6 +29,7 @@ export const useSettings = create<SettingsStore>((set, get) => ({
       // IndexedDB indisponible : session en mémoire avec le profil par défaut
     }
     applyTheme(profile.theme);
+    applyUiLanguage(profile.uiLanguage);
     setSoundsEnabled(profile.sounds);
     set({ profile, loaded: true });
   },
@@ -32,6 +37,7 @@ export const useSettings = create<SettingsStore>((set, get) => ({
     // application locale immédiate (feedback instantané), persistance ensuite
     set({ profile: { ...get().profile, ...patch } });
     if (patch.theme) applyTheme(patch.theme);
+    if (patch.uiLanguage) applyUiLanguage(patch.uiLanguage);
     if (patch.sounds !== undefined) setSoundsEnabled(patch.sounds);
     try {
       await updateProfile(patch);

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { detectUiLanguage } from '@/i18n/detect';
 
 export const languageSchema = z.enum(['fr', 'en', 'c', 'python']);
 const tierSchema = z.enum(['bronze', 'argent', 'or', 'platine', 'diamant', 'challenger']);
@@ -9,6 +10,8 @@ export const profileSchema = z.object({
   theme: z.enum(['dark', 'light']),
   sounds: z.boolean(),
   defaultLanguage: languageSchema,
+  // profils legacy sans le champ : langue détectée du navigateur (défaut dynamique zod v3)
+  uiLanguage: z.enum(['fr', 'en']).default(() => detectUiLanguage()),
   focusTimeoutSec: z.number().min(1).max(60),
   createdAt: z.number(),
   lastActiveAt: z.number(),
