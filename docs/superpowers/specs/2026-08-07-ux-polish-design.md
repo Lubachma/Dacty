@@ -104,5 +104,5 @@ actuel suffit), refonte visuelle, darkening des hovers.
 
 ## Vérification
 
-1. `npm run test` : 145 → 152 tests verts.
+1. `npm run test` : 145 → 151 tests verts.
 2. `npm run build` : tsc + vite verts.
