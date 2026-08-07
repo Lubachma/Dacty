@@ -7,11 +7,13 @@ import { db } from '@/db/db';
 import { recordChallengerResult } from '@/db/challengerRepo';
 import { getOfficialTexts } from '@/texts/corpus';
 import { useRunStore } from '@/state/runStore';
+import { setUiLanguage } from '@/test/i18n';
 import { ChallengerPage } from './ChallengerPage';
 
 const enOfficial = getOfficialTexts('en').map((t) => t.id);
 
 beforeEach(async () => {
+  setUiLanguage('fr');
   await Promise.all(db.tables.map((t) => t.clear()));
   useRunStore.getState().reset();
 });

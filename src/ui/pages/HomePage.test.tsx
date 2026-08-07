@@ -4,9 +4,11 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { MemoryRouter } from 'react-router';
 import { db } from '@/db/db';
 import { saveRun } from '@/db/runsRepo';
+import { setUiLanguage } from '@/test/i18n';
 import { HomePage } from './HomePage';
 
 beforeEach(async () => {
+  setUiLanguage('fr');
   await Promise.all(db.tables.map((t) => t.clear()));
 });
 

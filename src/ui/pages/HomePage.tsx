@@ -6,16 +6,16 @@ import { getProgress } from '@/db/challengerRepo';
 import type { ChallengerProgress, RunRecord } from '@/db/types';
 import { TierBadge } from '@/ui/components/TierBadge';
 import { useSettings } from '@/state/settingsStore';
+import { useDateFormatter, useT } from '@/i18n';
 import type { Language } from '@/texts/types';
 
-const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'short', timeStyle: 'short' });
-
 function LeagueMini({ label, progress }: { label: string; progress: ChallengerProgress | null }) {
+  const t = useT();
   return (
     <div className="flex items-center justify-between rounded-xl border border-line bg-surface px-4 py-3 backdrop-blur">
       <span className="font-semibold">{label}</span>
       {progress?.tier ? <TierBadge tier={progress.tier} /> : (
-        <span className="text-sm text-muted">Non classé</span>
+        <span className="text-sm text-muted">{t('common.unranked')}</span>
       )}
       <span className="font-type font-bold">{progress?.total ?? 0} pts</span>
     </div>
@@ -24,6 +24,8 @@ function LeagueMini({ label, progress }: { label: string; progress: ChallengerPr
 
 export function HomePage() {
   const pseudo = useSettings((s) => s.profile.pseudo);
+  const t = useT();
+  const dateFmt = useDateFormatter({ dateStyle: 'short', timeStyle: 'short' });
   const [progress, setProgress] = useState<Record<Language, ChallengerProgress | null>>({
     fr: null, en: null, c: null, python: null,
   });
@@ -51,35 +53,35 @@ export function HomePage() {
           <span className="text-accent">Dacty</span>
         </h1>
         <p className="max-w-md text-lg text-muted">
-          Le speedrun dactylo. Tape des textes le plus vite possible, grimpe la ligue, débloque les succès.
+          {t('home.tagline')}
         </p>
         <div className="flex gap-3">
           <Link
             to="/play"
             className="rounded-xl bg-accent-strong px-6 py-3 font-bold text-white transition-opacity hover:opacity-90"
           >
-            Entraînement libre
+            {t('home.freePractice')}
           </Link>
           <Link
             to="/challenger"
             className="rounded-xl border border-line px-6 py-3 font-bold transition-colors hover:bg-surface"
           >
-            Mode Challenger
+            {t('home.challengerMode')}
           </Link>
         </div>
-        <p className="text-sm text-muted">Bienvenue, {pseudo}.</p>
+        <p className="text-sm text-muted">{t('home.welcome', { pseudo })}</p>
       </motion.section>
 
       <section className="grid gap-3 sm:grid-cols-2">
-        <LeagueMini label="Ligue française" progress={progress.fr} />
-        <LeagueMini label="Ligue anglaise" progress={progress.en} />
-        <LeagueMini label="Ligue C" progress={progress.c} />
-        <LeagueMini label="Ligue Python" progress={progress.python} />
+        <LeagueMini label={t('home.league.fr')} progress={progress.fr} />
+        <LeagueMini label={t('home.league.en')} progress={progress.en} />
+        <LeagueMini label={t('home.league.c')} progress={progress.c} />
+        <LeagueMini label={t('home.league.python')} progress={progress.python} />
       </section>
 
       {recent.length > 0 && (
         <section>
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">Dernières runs</h2>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">{t('home.recentRuns')}</h2>
           <ul className="flex flex-col gap-2">
             {recent.map((r) => (
               <li
@@ -87,9 +89,9 @@ export function HomePage() {
                 className="flex items-center gap-4 rounded-xl border border-line bg-surface px-4 py-2 text-sm backdrop-blur"
               >
                 <span className="font-type font-bold">{r.wpm.toFixed(1)} WPM</span>
-                <span className="text-muted">{Math.round(r.accuracy * 100)} %</span>
+                <span className="text-muted">{Math.round(r.accuracy * 100)}{t('unit.percent')}</span>
                 <span className="rounded-full border border-line px-2 py-0.5 text-xs text-muted">
-                  {r.mode === 'free' ? 'Libre' : 'Challenger'} · {r.language.toUpperCase()}
+                  {r.mode === 'free' ? t('home.mode.free') : t('home.mode.challenger')} · {r.language.toUpperCase()}
                 </span>
                 <span className="ml-auto text-xs text-muted">{dateFmt.format(r.date)}</span>
               </li>
