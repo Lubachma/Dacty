@@ -7,7 +7,7 @@ export const DEFAULT_PROFILE: Profile = {
   pseudo: 'Joueur',
   theme: 'dark',
   sounds: true,
-  defaultLanguage: 'fr',
+  defaultLanguage: 'en',
   focusTimeoutSec: 5,
   createdAt: 0,
   lastActiveAt: 0,

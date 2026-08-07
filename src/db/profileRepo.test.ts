@@ -15,6 +15,11 @@ describe('profileRepo', () => {
     expect(await db.profile.count()).toBe(1);
   });
 
+  it('configure la langue par défaut sur anglais au premier lancement', async () => {
+    const p = await getProfile();
+    expect(p.defaultLanguage).toBe('en');
+  });
+
   it('met à jour partiellement le profil', async () => {
     await updateProfile({ pseudo: 'Ludo', theme: 'light' });
     const p = await getProfile();
