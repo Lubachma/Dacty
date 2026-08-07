@@ -72,7 +72,7 @@ export function DevPage() {
       <div className="flex flex-col gap-6">
         {typing && <RunHud typing={typing} />}
         {status === 'invalidated' ? (
-          <div className="rounded-xl border border-err/40 bg-err/10 p-6 text-center">
+          <div role="alert" className="rounded-xl border border-err/40 bg-err/10 p-6 text-center">
             <p className="mb-4 font-bold text-err">{t('run.invalidated')}</p>
             <button
               type="button"

@@ -39,4 +39,13 @@ describe('App', () => {
     expect(await screen.findByRole('heading', { name: 'Réglages' })).toBeInTheDocument();
     expect(document.title).toBe('Réglages · Dacty');
   });
+
+  it('définit le titre de l\'onglet en anglais quand uiLanguage est en', async () => {
+    setUiLanguage('en');
+    await updateProfile({ uiLanguage: 'en' });
+    window.history.pushState({}, '', '/settings');
+    render(<App />);
+    expect(await screen.findByRole('heading', { name: 'Settings' })).toBeInTheDocument();
+    expect(document.title).toBe('Settings · Dacty');
+  });
 });

@@ -2,8 +2,8 @@ import { NavLink } from 'react-router';
 import { useT } from '@/i18n';
 import type { TranslationKey } from '@/i18n/fr';
 
-const LINKS: { to: string; key: TranslationKey; end?: boolean }[] = [
-  { to: '/', key: 'nav.home', end: true },
+const LINKS: { to: string; key: TranslationKey }[] = [
+  { to: '/', key: 'nav.home' },
   { to: '/play', key: 'nav.training' },
   { to: '/dev', key: 'nav.dev' },
   { to: '/challenger', key: 'nav.challenger' },

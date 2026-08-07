@@ -8,6 +8,8 @@ describe('Sparkline', () => {
     const line = container.querySelector('polyline');
     // y = 40 - (v/20)*36 - 2 -> v=10 : 20 ; v=20 : 2
     expect(line?.getAttribute('points')).toBe('0,20 50,2 100,20');
+    // le label est exposé via aria-label sur le svg
+    expect(container.querySelector('svg')?.getAttribute('aria-label')).toBe('Évolution du WPM');
   });
 
   it('ne rend rien sans données', () => {

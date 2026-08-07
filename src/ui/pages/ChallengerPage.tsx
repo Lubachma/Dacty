@@ -134,7 +134,7 @@ export function ChallengerPage() {
       <div className="flex flex-col gap-6">
         {typing && <RunHud typing={typing} />}
         {status === 'invalidated' ? (
-          <div className="rounded-xl border border-err/40 bg-err/10 p-6 text-center">
+          <div role="alert" className="rounded-xl border border-err/40 bg-err/10 p-6 text-center">
             <p className="mb-4 font-bold text-err">{t('run.invalidatedRanked')}</p>
             <button type="button" onClick={reset} className="rounded-xl bg-accent-strong px-6 py-2 font-bold text-white">
               {t('run.backToLeague')}
