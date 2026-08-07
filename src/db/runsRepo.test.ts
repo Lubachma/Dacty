@@ -64,6 +64,10 @@ describe('runsRepo', () => {
     expect(bests.longestRun?.chars).toBe(300);
   });
 
+  it('personalBests retourne trois null sur base vide', async () => {
+    expect(await personalBests()).toEqual({ bestWpm: null, bestAccuracy: null, longestRun: null });
+  });
+
   it('écarte les lignes corrompues à la lecture, avec avertissement', async () => {
     await saveRun(makeRun({}));
     // IndexedDB est modifiable hors de l'app : insertion brute d'une ligne invalide

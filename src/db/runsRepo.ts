@@ -21,6 +21,11 @@ function parseRuns(rows: unknown[]): RunRecord[] {
   return valid;
 }
 
+/** Prédicat de validation pour les filtres de requêtes d'index (curseur paresseux). */
+function isValidRun(r: RunRecord): boolean {
+  return runRecordSchema.safeParse(r).success;
+}
+
 const keyOf = (mode: GameMode, r: RunRecord): number => (mode === 'challenger' ? r.points : r.wpm);
 
 export async function topRuns(
@@ -64,12 +69,15 @@ export async function personalBests(): Promise<{
   bestAccuracy: RunRecord | null;
   longestRun: RunRecord | null;
 }> {
-  const runs = parseRuns(await db.runs.toArray());
-  const max = (list: RunRecord[], key: (r: RunRecord) => number): RunRecord | null =>
-    list.length === 0 ? null : list.reduce((a, b) => (key(b) > key(a) ? b : a));
-  return {
-    bestWpm: max(runs, (r) => r.wpm),
-    bestAccuracy: max(runs.filter((r) => r.durationMs >= 10_000), (r) => r.accuracy),
-    longestRun: max(runs, (r) => r.chars),
-  };
+  // requêtes d'index paresseuses : le curseur s'arrête au premier match valide,
+  // sans charger la table (les lignes corrompues sont écartées par le filtre)
+  const bestWpm = (await db.runs.orderBy('wpm').reverse().filter(isValidRun).first()) ?? null;
+  const bestAccuracy =
+    (await db.runs
+      .orderBy('accuracy')
+      .reverse()
+      .filter((r) => r.durationMs >= 10_000 && isValidRun(r))
+      .first()) ?? null;
+  const longestRun = (await db.runs.orderBy('chars').reverse().filter(isValidRun).first()) ?? null;
+  return { bestWpm, bestAccuracy, longestRun };
 }
