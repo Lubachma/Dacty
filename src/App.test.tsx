@@ -1,7 +1,10 @@
 import 'fake-indexeddb/auto';
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { setUiLanguage } from '@/test/i18n';
 import App from './App';
+
+beforeEach(() => setUiLanguage('fr'));
 
 describe('App', () => {
   it('rend la page d\'accueil', async () => {

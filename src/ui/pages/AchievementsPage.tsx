@@ -6,18 +6,19 @@ import { computeStreak } from '@/achievements/check';
 import { db } from '@/db/db';
 import { allRuns } from '@/db/runsRepo';
 import { getProgress } from '@/db/challengerRepo';
+import { pick, useDateFormatter, useT, useUiLanguage } from '@/i18n';
+import type { TranslationKey } from '@/i18n/fr';
+import type { UiLanguage } from '@/i18n/types';
 import type { RunRecord } from '@/db/types';
 
-const CATEGORIES: { id: AchievementCategory; label: string }[] = [
-  { id: 'vitesse', label: 'Vitesse' },
-  { id: 'precision', label: 'Précision' },
-  { id: 'volume', label: 'Volume' },
-  { id: 'challenger', label: 'Challenger' },
-  { id: 'dev', label: 'Dev' },
-  { id: 'fun', label: 'Fun' },
+const CATEGORIES: { id: AchievementCategory; key: TranslationKey }[] = [
+  { id: 'vitesse', key: 'achievements.category.vitesse' },
+  { id: 'precision', key: 'achievements.category.precision' },
+  { id: 'volume', key: 'achievements.category.volume' },
+  { id: 'challenger', key: 'achievements.category.challenger' },
+  { id: 'dev', key: 'achievements.category.dev' },
+  { id: 'fun', key: 'achievements.category.fun' },
 ];
-
-const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' });
 
 const SYNTHETIC_RUN: RunRecord = {
   date: 0, mode: 'free', language: 'fr', textId: '',
@@ -25,11 +26,14 @@ const SYNTHETIC_RUN: RunRecord = {
   durationMs: 0, wpm: 0, accuracy: 1, points: 0, errors: 0, backspaces: 0, chars: 0, noBackspace: false,
 };
 
-function AchievementCard({ def, unlockedAt, ctx }: {
+function AchievementCard({ def, unlockedAt, ctx, lang }: {
   def: AchievementDef;
   unlockedAt: number | null;
   ctx: AchievementContext;
+  lang: UiLanguage;
 }) {
+  const t = useT();
+  const dateFmt = useDateFormatter({ dateStyle: 'medium' });
   const progress = !unlockedAt && def.target && def.progress ? def.progress(ctx) : null;
   const pct = progress !== null && def.target ? Math.min(100, Math.round((progress / def.target) * 100)) : null;
   return (
@@ -38,10 +42,10 @@ function AchievementCard({ def, unlockedAt, ctx }: {
         unlockedAt ? 'border-accent/50 bg-accent/10' : 'border-line bg-surface opacity-80'
       }`}
     >
-      <p className="font-bold">{def.title}</p>
-      <p className="text-sm text-muted">{def.description}</p>
+      <p className="font-bold">{pick(def.title, lang)}</p>
+      <p className="text-sm text-muted">{pick(def.description, lang)}</p>
       {unlockedAt ? (
-        <p className="mt-2 text-xs text-accent">Débloqué le {dateFmt.format(unlockedAt)}</p>
+        <p className="mt-2 text-xs text-accent">{t('achievements.unlockedAt', { date: dateFmt.format(unlockedAt) })}</p>
       ) : (
         progress !== null && def.target && (
           <div className="mt-2">
@@ -57,6 +61,8 @@ function AchievementCard({ def, unlockedAt, ctx }: {
 }
 
 export function AchievementsPage() {
+  const t = useT();
+  const lang = useUiLanguage();
   const [ctx, setCtx] = useState<AchievementContext | null>(null);
   const [unlocked, setUnlocked] = useState<Map<string, number>>(new Map());
 
@@ -86,12 +92,12 @@ export function AchievementsPage() {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-baseline gap-4">
-        <h1 className="text-2xl font-bold">Succès</h1>
+        <h1 className="text-2xl font-bold">{t('achievements.title')}</h1>
         <p className="font-type text-lg text-muted">{unlocked.size} / {ACHIEVEMENTS.length}</p>
       </div>
-      {CATEGORIES.map(({ id, label }) => (
+      {CATEGORIES.map(({ id, key }) => (
         <section key={id}>
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">{label}</h2>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">{t(key)}</h2>
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {ACHIEVEMENTS.filter((a) => a.category === id).map((a) => (
               ctx && (
@@ -100,6 +106,7 @@ export function AchievementsPage() {
                   def={a}
                   unlockedAt={unlocked.get(a.id) ?? null}
                   ctx={ctx}
+                  lang={lang}
                 />
               )
             ))}

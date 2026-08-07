@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import type { RecordKind, RunResult } from '@/game/runFlow';
+import { pick, useUiLanguage } from '@/i18n';
 import { Sparkline } from './Sparkline';
 import { TierBadge } from './TierBadge';
 import type { AchievementDef } from '@/achievements/definitions';
@@ -17,6 +18,7 @@ interface ResultsScreenProps {
 }
 
 export function ResultsScreen({ result, onReplay, onExit }: ResultsScreenProps) {
+  const lang = useUiLanguage();
   const { run } = result;
   return (
     <motion.div
@@ -75,7 +77,7 @@ export function ResultsScreen({ result, onReplay, onExit }: ResultsScreenProps) 
           <ul className="flex flex-wrap gap-2">
             {result.newAchievements.map((a: AchievementDef) => (
               <li key={a.id} className="rounded-full border border-line bg-bg px-3 py-1 text-sm">
-                {a.title}
+                {pick(a.title, lang)}
               </li>
             ))}
           </ul>

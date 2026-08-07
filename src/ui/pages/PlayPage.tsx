@@ -10,6 +10,7 @@ import { RunHud } from '@/ui/components/RunHud';
 import { ResultsScreen } from '@/ui/components/ResultsScreen';
 import { Toggle } from '@/ui/components/Toggle';
 import { playError, playKey, playSuccess } from '@/ui/sounds';
+import { pick } from '@/i18n';
 import { pickText } from '@/texts/corpus';
 import { ALL_OPTIONS_ON, applyOptions } from '@/texts/normalize';
 import type { Language, TextLength, TextOptions } from '@/texts/types';
@@ -45,10 +46,14 @@ export function PlayPage() {
   useEffect(() => {
     if (!result) return;
     result.newAchievements.forEach((a) =>
-      push({ title: a.title, description: a.description, kind: 'achievement' }),
+      push({
+        title: pick(a.title, profile.uiLanguage),
+        description: pick(a.description, profile.uiLanguage),
+        kind: 'achievement',
+      }),
     );
     if (result.newRecords.length > 0) playSuccess();
-  }, [result, push]);
+  }, [result, push, profile.uiLanguage]);
 
   const begin = () => {
     const entry = pickText(language, length);

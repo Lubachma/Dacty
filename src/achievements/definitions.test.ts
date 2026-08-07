@@ -43,6 +43,26 @@ describe('definitions', () => {
     expect(new Set(ACHIEVEMENTS.map((a) => a.id)).size).toBe(28);
   });
 
+  it('chaque succès a un titre et une description en fr et en', () => {
+    for (const a of ACHIEVEMENTS) {
+      expect(a.title.fr, `titre fr de ${a.id}`).toBeTruthy();
+      expect(a.title.en, `titre en de ${a.id}`).toBeTruthy();
+      expect(a.description.fr, `description fr de ${a.id}`).toBeTruthy();
+      expect(a.description.en, `description en de ${a.id}`).toBeTruthy();
+    }
+  });
+
+  it('les descriptions générées interpolent les paramètres dans les deux langues', () => {
+    expect(def('wpm-60').description).toEqual({
+      fr: 'Atteindre 60 WPM sur une run',
+      en: 'Reach 60 WPM on a run',
+    });
+    expect(def('runs-500').description).toEqual({
+      fr: 'Terminer 500 runs',
+      en: 'Finish 500 runs',
+    });
+  });
+
   it('wpm-60 se débloque à 60 WPM', () => {
     expect(def('wpm-60').isUnlocked(ctx({ newRun: run({ wpm: 59 }) }))).toBe(false);
     expect(def('wpm-60').isUnlocked(ctx({ newRun: run({ wpm: 60 }) }))).toBe(true);

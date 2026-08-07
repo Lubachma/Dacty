@@ -9,6 +9,7 @@ import { RunHud } from '@/ui/components/RunHud';
 import { ResultsScreen } from '@/ui/components/ResultsScreen';
 import { TierBadge, tierLabel } from '@/ui/components/TierBadge';
 import { playError, playKey, playSuccess } from '@/ui/sounds';
+import { pick } from '@/i18n';
 import { getOfficialTexts } from '@/texts/corpus';
 import { ALL_OPTIONS_ON, applyOptions } from '@/texts/normalize';
 import { getProgress } from '@/db/challengerRepo';
@@ -88,13 +89,17 @@ export function ChallengerPage() {
     if (!result) return;
     refresh();
     result.newAchievements.forEach((a) =>
-      push({ title: a.title, description: a.description, kind: 'achievement' }),
+      push({
+        title: pick(a.title, profile.uiLanguage),
+        description: pick(a.description, profile.uiLanguage),
+        kind: 'achievement',
+      }),
     );
     if (result.tierUp) {
       push({ title: `Nouveau tier : ${tierLabel(result.tierUp)}`, kind: 'info' });
       playSuccess();
     }
-  }, [result, refresh, push]);
+  }, [result, refresh, push, profile.uiLanguage]);
 
   const play = (textId: string) => {
     const entry = getOfficialTexts(language).find((t) => t.id === textId);

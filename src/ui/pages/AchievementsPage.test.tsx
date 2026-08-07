@@ -3,9 +3,11 @@ import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { MemoryRouter } from 'react-router';
 import { db } from '@/db/db';
+import { setUiLanguage } from '@/test/i18n';
 import { AchievementsPage } from './AchievementsPage';
 
 beforeEach(async () => {
+  setUiLanguage('fr');
   await Promise.all(db.tables.map((t) => t.clear()));
   await db.achievements.add({ id: 'wpm-40', unlockedAt: Date.now() });
 });
@@ -18,6 +20,13 @@ describe('AchievementsPage', () => {
     expect(screen.getByText('Inhumain')).toBeInTheDocument();
     // « Challenger » apparaît deux fois : titre de section et succès « Challenger »
     expect(screen.getAllByText('Challenger').length).toBeGreaterThan(0);
+  });
+
+  it('affiche les succès en anglais quand uiLanguage est en', async () => {
+    setUiLanguage('en');
+    render(<MemoryRouter><AchievementsPage /></MemoryRouter>);
+    expect(await screen.findByText('Warm-up')).toBeInTheDocument();
+    expect(screen.getByText('Inhuman')).toBeInTheDocument();
   });
 
   it('affiche la progression des succès verrouillés', async () => {
