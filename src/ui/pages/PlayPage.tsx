@@ -5,6 +5,7 @@ import { useToasts } from '@/state/toastStore';
 import { useFocusGuard } from '@/ui/hooks/useFocusGuard';
 import { usePauseRunOnUnmount } from '@/ui/hooks/usePauseRunOnUnmount';
 import { TypingArea } from '@/ui/components/TypingArea';
+import { RunControls } from '@/ui/components/RunControls';
 import { RunHud } from '@/ui/components/RunHud';
 import { ResultsScreen } from '@/ui/components/ResultsScreen';
 import { Toggle } from '@/ui/components/Toggle';
@@ -94,6 +95,7 @@ export function PlayPage() {
                 <p className="text-center text-sm text-muted">En pause — clique dans le texte pour reprendre.</p>
               )}
               <TypingArea state={typing} disabled={status !== 'running'} onChar={handleChar} onBackspace={backspace} />
+              <RunControls />
             </>
           )
         )}
