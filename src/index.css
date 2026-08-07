@@ -6,6 +6,7 @@
   --color-text: var(--text);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
   --color-line: var(--line);
   --color-ok: var(--ok);
   --color-err: var(--err);
@@ -16,7 +17,8 @@
   --surface: #141b24cc;
   --text: #e6edf3;
   --muted: #8b98a5;
-  --accent: #7c5cff;
+  --accent: #8064ff; /* 4,75:1 sur --bg — AA */
+  --accent-strong: #6a4dff; /* blanc dessus : 5,1:1 — boutons à texte blanc */
   --line: #232d3a;
   --ok: #3fb950;
   --err: #f85149;
@@ -28,6 +30,7 @@ html[data-theme="light"] {
   --text: #1f2328;
   --muted: #59636e;
   --accent: #6a4dff;
+  --accent-strong: #6a4dff;
   --line: #d1d9e0;
   --ok: #1a7f37;
   --err: #d1242f;

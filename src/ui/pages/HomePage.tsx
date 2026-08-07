@@ -56,7 +56,7 @@ export function HomePage() {
         <div className="flex gap-3">
           <Link
             to="/play"
-            className="rounded-xl bg-accent px-6 py-3 font-bold text-white transition-opacity hover:opacity-90"
+            className="rounded-xl bg-accent-strong px-6 py-3 font-bold text-white transition-opacity hover:opacity-90"
           >
             Entraînement libre
           </Link>

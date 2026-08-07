@@ -128,7 +128,7 @@ export function ChallengerPage() {
         {status === 'invalidated' ? (
           <div className="rounded-xl border border-err/40 bg-err/10 p-6 text-center">
             <p className="mb-4 font-bold text-err">Run classée invalidée : perte de focus trop longue.</p>
-            <button type="button" onClick={reset} className="rounded-xl bg-accent px-6 py-2 font-bold text-white">
+            <button type="button" onClick={reset} className="rounded-xl bg-accent-strong px-6 py-2 font-bold text-white">
               Retour à la ligue
             </button>
           </div>
@@ -183,7 +183,7 @@ export function ChallengerPage() {
             <button
               type="button"
               onClick={() => play(t.id)}
-              className="rounded-lg bg-accent px-4 py-1.5 text-sm font-bold text-white transition-opacity hover:opacity-90"
+              className="rounded-lg bg-accent-strong px-4 py-1.5 text-sm font-bold text-white transition-opacity hover:opacity-90"
             >
               Jouer
             </button>

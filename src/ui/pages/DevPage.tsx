@@ -69,7 +69,7 @@ export function DevPage() {
             <button
               type="button"
               onClick={reset}
-              className="rounded-xl bg-accent px-6 py-2 font-bold text-white"
+              className="rounded-xl bg-accent-strong px-6 py-2 font-bold text-white"
             >
               Nouvelle run
             </button>
@@ -136,7 +136,7 @@ export function DevPage() {
       <button
         type="button"
         onClick={begin}
-        className="rounded-xl bg-accent px-8 py-3 text-lg font-bold text-white transition-opacity hover:opacity-90"
+        className="rounded-xl bg-accent-strong px-8 py-3 text-lg font-bold text-white transition-opacity hover:opacity-90"
       >
         Démarrer
       </button>

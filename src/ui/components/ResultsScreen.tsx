@@ -86,7 +86,7 @@ export function ResultsScreen({ result, onReplay, onExit }: ResultsScreenProps) 
         <button
           type="button"
           onClick={onReplay}
-          className="rounded-xl bg-accent px-6 py-2 font-bold text-white transition-opacity hover:opacity-90"
+          className="rounded-xl bg-accent-strong px-6 py-2 font-bold text-white transition-opacity hover:opacity-90"
         >
           Rejouer
         </button>
