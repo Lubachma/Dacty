@@ -1,16 +1,18 @@
 import 'fake-indexeddb/auto';
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { MemoryRouter } from 'react-router';
 import { db } from '@/db/db';
 import { useSettings } from '@/state/settingsStore';
 import { getProfile } from '@/db/profileRepo';
+import { setUiLanguage } from '@/test/i18n';
 import { SettingsPage } from './SettingsPage';
 
 beforeEach(async () => {
   await Promise.all(db.tables.map((t) => t.clear()));
   await useSettings.getState().load();
+  setUiLanguage('fr');
 });
 
 describe('SettingsPage', () => {
@@ -40,5 +42,24 @@ describe('SettingsPage', () => {
       useSettings.setState((s) => ({ profile: { ...s.profile, pseudo: 'Ludo' }, loaded: true }));
     });
     expect(screen.getByLabelText('Pseudo')).toHaveValue('Ludo');
+  });
+
+  it('bascule la langue de l’interface et persiste', async () => {
+    render(<MemoryRouter><SettingsPage /></MemoryRouter>);
+    // deux rows ont des boutons autonymes : on cible celle de la langue d'interface
+    const uiLangRow = (await screen.findByText("Langue de l'interface")).parentElement!;
+    await userEvent.click(within(uiLangRow).getByRole('button', { name: 'English' }));
+    expect(useSettings.getState().profile.uiLanguage).toBe('en');
+    expect(document.documentElement.lang).toBe('en');
+    expect((await getProfile()).uiLanguage).toBe('en');
+    // l'UI bascule immédiatement
+    expect(await screen.findByRole('heading', { name: 'Settings' })).toBeInTheDocument();
+  });
+
+  it('affiche l’interface en anglais', async () => {
+    setUiLanguage('en');
+    render(<MemoryRouter><SettingsPage /></MemoryRouter>);
+    expect(await screen.findByRole('heading', { name: 'Settings' })).toBeInTheDocument();
+    expect(screen.getByText('Interface language')).toBeInTheDocument();
   });
 });

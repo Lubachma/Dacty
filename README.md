@@ -6,7 +6,7 @@
 
 **The typing speedrun trainer.** Type texts as fast as you can, climb the Challenger league, unlock achievements.
 
-100 % local — your data stays in your browser (IndexedDB). The app UI is currently in French.
+100 % local — your data stays in your browser (IndexedDB). Bilingual interface (English/French), detected from your browser on first launch and switchable in the settings.
 
 [![CI](https://github.com/Lubachma/Dacty/actions/workflows/ci.yml/badge.svg)](https://github.com/Lubachma/Dacty/actions/workflows/ci.yml)
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)

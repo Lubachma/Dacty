@@ -6,6 +6,8 @@ import { nowMs } from '@/engine/clock';
 import { wpmTimeline } from '@/engine/stats';
 import type { TypingState } from '@/engine/types';
 import { buildRunRecord, completeRun, type RunConfig, type RunResult } from '@/game/runFlow';
+import { translate } from '@/i18n/translate';
+import { useSettings } from './settingsStore';
 import { useToasts } from './toastStore';
 
 // incrémenté à chaque start/reset : invalide les completeRun encore en vol
@@ -73,9 +75,10 @@ export const useRunStore = create<RunStore>((set, get) => ({
               newRecords: [],
             },
           });
+          const uiLanguage = useSettings.getState().profile.uiLanguage;
           useToasts.getState().push({
-            title: 'Sauvegarde impossible',
-            description: 'Le stockage local est indisponible : cette run ne sera pas enregistrée.',
+            title: translate(uiLanguage, 'run.saveError.title'),
+            description: translate(uiLanguage, 'run.saveError.description'),
             kind: 'info',
           });
         });

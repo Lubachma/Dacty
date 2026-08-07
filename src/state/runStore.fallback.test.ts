@@ -13,6 +13,7 @@ vi.mock('@/game/runFlow', async (importOriginal) => {
 
 import { useRunStore } from './runStore';
 import { useToasts } from './toastStore';
+import { setUiLanguage } from '@/test/i18n';
 
 const config = { mode: 'free' as const, language: 'fr' as const, textId: 'fr-001', options: ALL_OPTIONS_ON };
 
@@ -20,6 +21,7 @@ beforeEach(async () => {
   await Promise.all(db.tables.map((t) => t.clear()));
   useRunStore.getState().reset();
   useToasts.setState({ toasts: [] });
+  setUiLanguage('fr');
 });
 
 describe('runStore sans persistance', () => {

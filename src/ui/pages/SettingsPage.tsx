@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { db } from '@/db/db';
 import { useSettings } from '@/state/settingsStore';
+import { useT } from '@/i18n';
 import { Toggle } from '@/ui/components/Toggle';
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
@@ -13,6 +14,7 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
 }
 
 export function SettingsPage() {
+  const t = useT();
   const profile = useSettings((s) => s.profile);
   const update = useSettings((s) => s.update);
   const [pseudo, setPseudo] = useState(profile.pseudo);
@@ -41,11 +43,11 @@ export function SettingsPage() {
 
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-4">
-      <h1 className="mb-2 text-2xl font-bold">Réglages</h1>
+      <h1 className="mb-2 text-2xl font-bold">{t('settings.title')}</h1>
 
-      <Row label="Pseudo">
+      <Row label={t('settings.pseudo')}>
         <input
-          aria-label="Pseudo"
+          aria-label={t('settings.pseudo')}
           value={pseudo}
           onChange={(e) => setPseudo(e.target.value)}
           onBlur={savePseudo}
@@ -55,23 +57,23 @@ export function SettingsPage() {
         />
       </Row>
 
-      <Row label="Thème clair">
+      <Row label={t('settings.lightTheme')}>
         <Toggle
           checked={profile.theme === 'light'}
           onChange={(v) => void update({ theme: v ? 'light' : 'dark' })}
-          label="Thème clair"
+          label={t('settings.lightTheme')}
         />
       </Row>
 
-      <Row label="Sons">
+      <Row label={t('settings.sounds')}>
         <Toggle
           checked={profile.sounds}
           onChange={(v) => void update({ sounds: v })}
-          label="Sons"
+          label={t('settings.sounds')}
         />
       </Row>
 
-      <Row label="Langue par défaut">
+      <Row label={t('settings.defaultLanguage')}>
         <div className="flex gap-2">
           {(['fr', 'en'] as const).map((l) => (
             <button
@@ -88,9 +90,26 @@ export function SettingsPage() {
         </div>
       </Row>
 
-      <Row label="Invalidation après perte de focus (s)">
+      <Row label={t('settings.uiLanguage')}>
+        <div className="flex gap-2">
+          {(['fr', 'en'] as const).map((l) => (
+            <button
+              key={l}
+              type="button"
+              onClick={() => void update({ uiLanguage: l })}
+              className={`rounded-lg border px-3 py-1 text-sm font-bold transition-colors ${
+                profile.uiLanguage === l ? 'border-accent bg-accent/15 text-text' : 'border-line text-muted'
+              }`}
+            >
+              {l === 'fr' ? 'Français' : 'English'}
+            </button>
+          ))}
+        </div>
+      </Row>
+
+      <Row label={t('settings.focusTimeout')}>
         <input
-          aria-label="Délai d'invalidation"
+          aria-label={t('settings.focusTimeoutAria')}
           type="number"
           min={1}
           max={60}
@@ -104,7 +123,7 @@ export function SettingsPage() {
       </Row>
 
       <div className="mt-6 rounded-xl border border-err/40 p-4">
-        <p className="mb-3 text-sm font-bold text-err">Zone danger</p>
+        <p className="mb-3 text-sm font-bold text-err">{t('settings.dangerZone')}</p>
         <button
           type="button"
           onClick={() => void resetAll()}
@@ -112,7 +131,7 @@ export function SettingsPage() {
             confirming ? 'bg-err text-white' : 'border border-err/50 text-err'
           }`}
         >
-          {confirming ? 'Confirmer la suppression ?' : 'Réinitialiser toutes les données'}
+          {confirming ? t('settings.resetConfirm') : t('settings.resetAll')}
         </button>
       </div>
     </div>
