@@ -35,7 +35,7 @@ Spec : `docs/superpowers/specs/2026-08-07-run-index-reads-design.md`
 - Produces: `db` en version 2, `runs` indexé aussi sur `accuracy` et `chars`.
   Consommé par Task 2.
 
-- [ ] **Step 1: Écrire le test qui échoue** — `src/db/db.test.ts`
+- [x] **Step 1: Écrire le test qui échoue** — `src/db/db.test.ts`
 
 ```ts
 import 'fake-indexeddb/auto';
@@ -51,12 +51,12 @@ describe('schéma dexie', () => {
 });
 ```
 
-- [ ] **Step 2: Vérifier que le test échoue**
+- [x] **Step 2: Vérifier que le test échoue**
 
 Run: `npx vitest run src/db/db.test.ts`
 Expected: FAIL — `db.verno` vaut 1 et les index `accuracy`/`chars` n'existent pas.
 
-- [ ] **Step 3: Déclarer la v2** — dans `src/db/db.ts`, après le bloc `this.version(1)` :
+- [x] **Step 3: Déclarer la v2** — dans `src/db/db.ts`, après le bloc `this.version(1)` :
 
 ```ts
       this.version(1).stores({
@@ -71,12 +71,12 @@ Expected: FAIL — `db.verno` vaut 1 et les index `accuracy`/`chars` n'existent 
       });
 ```
 
-- [ ] **Step 4: Vérifier que le test passe**
+- [x] **Step 4: Vérifier que le test passe**
 
 Run: `npx vitest run src/db/db.test.ts`
 Expected: 1 test PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/db/db.ts src/db/db.test.ts
@@ -95,7 +95,7 @@ git commit -m "feat: schema v2 with accuracy and chars indexes on runs"
 - Produces: `personalBests()` — même signature, ne scanne plus la table. Consommé tel
   quel par `runFlow` et `LeaderboardPage` (aucun changement chez les appelants).
 
-- [ ] **Step 1: Ajouter le test de la base vide** — dans `src/db/runsRepo.test.ts`, dans
+- [x] **Step 1: Ajouter le test de la base vide** — dans `src/db/runsRepo.test.ts`, dans
 le `describe('runsRepo')` :
 
 ```ts
@@ -104,13 +104,13 @@ le `describe('runsRepo')` :
   });
 ```
 
-- [ ] **Step 2: Vérifier l'état des tests**
+- [x] **Step 2: Vérifier l'état des tests**
 
 Run: `npx vitest run src/db/runsRepo.test.ts`
 Expected: tous PASS (le nouveau test passe déjà — il épingle le comportement à préserver ;
 les 8 autres sont les garde-fous de la réécriture).
 
-- [ ] **Step 3: Réécrire `personalBests`** — dans `src/db/runsRepo.ts`, ajouter le helper
+- [x] **Step 3: Réécrire `personalBests`** — dans `src/db/runsRepo.ts`, ajouter le helper
 après `parseRuns` :
 
 ```ts
@@ -142,13 +142,13 @@ export async function personalBests(): Promise<{
 }
 ```
 
-- [ ] **Step 4: Vérifier que tous les tests du repo passent**
+- [x] **Step 4: Vérifier que tous les tests du repo passent**
 
 Run: `npx vitest run src/db/runsRepo.test.ts src/game/runFlow.test.ts`
 Expected: tous PASS — notamment « topRuns et personalBests ignorent les lignes
 corrompues » et « personalBests ignore la précision des runs < 10 s ».
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/db/runsRepo.ts src/db/runsRepo.test.ts
@@ -168,7 +168,7 @@ git commit -m "perf: read personalBests via lazy index queries"
 - Produces: `recentRuns(limit = 5): Promise<RunRecord[]>` — tri date décroissant, validé
   zod. Consommé par `HomePage`.
 
-- [ ] **Step 1: Écrire le test qui échoue** — dans `src/db/runsRepo.test.ts`, ajouter
+- [x] **Step 1: Écrire le test qui échoue** — dans `src/db/runsRepo.test.ts`, ajouter
 `recentRuns` à l'import depuis `./runsRepo`, puis :
 
 ```ts
@@ -179,12 +179,12 @@ git commit -m "perf: read personalBests via lazy index queries"
   });
 ```
 
-- [ ] **Step 2: Vérifier que le test échoue**
+- [x] **Step 2: Vérifier que le test échoue**
 
 Run: `npx vitest run src/db/runsRepo.test.ts`
 Expected: FAIL — `recentRuns` n'est pas exporté.
 
-- [ ] **Step 3: Implémenter et brancher** — dans `src/db/runsRepo.ts`, après `allRuns` :
+- [x] **Step 3: Implémenter et brancher** — dans `src/db/runsRepo.ts`, après `allRuns` :
 
 ```ts
 export async function recentRuns(limit = 5): Promise<RunRecord[]> {
@@ -207,12 +207,12 @@ import { recentRuns } from '@/db/runsRepo';
 (supprimer l'import `allRuns` devenu inutile et l'ancien `allRuns().then((runs) =>
 setRecent(runs.sort((a, b) => b.date - a.date).slice(0, 5)))`).
 
-- [ ] **Step 4: Vérifier que les tests passent**
+- [x] **Step 4: Vérifier que les tests passent**
 
 Run: `npx vitest run src/db/runsRepo.test.ts src/ui/pages/HomePage.test.tsx`
 Expected: tous PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/db/runsRepo.ts src/db/runsRepo.test.ts src/ui/pages/HomePage.tsx
@@ -223,17 +223,17 @@ git commit -m "perf: read home page recent runs via the date index"
 
 ### Task 4: Vérification finale
 
-- [ ] **Step 1: Suite complète**
+- [x] **Step 1: Suite complète**
 
 Run: `npm run test`
 Expected: 145 tests PASS (142 + 3 nouveaux).
 
-- [ ] **Step 2: Build**
+- [x] **Step 2: Build**
 
 Run: `npm run build`
 Expected: `tsc --noEmit` et `vite build` verts.
 
-- [ ] **Step 3: Cocher les cases du plan et commit final si nécessaire**
+- [x] **Step 3: Cocher les cases du plan et commit final si nécessaire**
 
 ```bash
 git add docs/superpowers/plans/2026-08-07-run-index-reads.md
