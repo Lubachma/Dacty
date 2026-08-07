@@ -5,12 +5,14 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { MemoryRouter } from 'react-router';
 import { db } from '@/db/db';
 import { useRunStore } from '@/state/runStore';
+import { setUiLanguage } from '@/test/i18n';
 import { ALL_OPTIONS_ON } from '@/texts/normalize';
 import { PlayPage } from './PlayPage';
 
 beforeEach(async () => {
   await Promise.all(db.tables.map((t) => t.clear()));
   useRunStore.getState().reset();
+  setUiLanguage('fr');
 });
 
 describe('PlayPage', () => {

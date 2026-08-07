@@ -9,22 +9,24 @@ import { RunControls } from '@/ui/components/RunControls';
 import { RunHud } from '@/ui/components/RunHud';
 import { ResultsScreen } from '@/ui/components/ResultsScreen';
 import { playError, playKey, playSuccess } from '@/ui/sounds';
-import { pick } from '@/i18n';
+import { pick, useT } from '@/i18n';
+import type { TranslationKey } from '@/i18n/fr';
 import { pickText } from '@/texts/corpus';
 import { ALL_OPTIONS_ON } from '@/texts/normalize';
 import { CODE_LANGUAGES, LANGUAGE_LABELS } from '@/texts/types';
 import type { Language, TextLength } from '@/texts/types';
 
-const LENGTHS: { value: TextLength; label: string }[] = [
-  { value: 'short', label: 'Extrait' },
-  { value: 'medium', label: 'Fonction' },
-  { value: 'long', label: 'Programme' },
+const LENGTHS: { value: TextLength; key: TranslationKey }[] = [
+  { value: 'short', key: 'dev.length.short' },
+  { value: 'medium', key: 'dev.length.medium' },
+  { value: 'long', key: 'dev.length.long' },
 ];
 
 export function DevPage() {
   const { status, typing, result, start, key, backspace, reset } = useRunStore();
   const profile = useSettings((s) => s.profile);
   const push = useToasts((s) => s.push);
+  const t = useT();
   const [language, setLanguage] = useState<Language>('python');
   const [length, setLength] = useState<TextLength>('short');
   useFocusGuard();
@@ -71,20 +73,20 @@ export function DevPage() {
         {typing && <RunHud typing={typing} />}
         {status === 'invalidated' ? (
           <div className="rounded-xl border border-err/40 bg-err/10 p-6 text-center">
-            <p className="mb-4 font-bold text-err">Run invalidée : la fenêtre a perdu le focus trop longtemps.</p>
+            <p className="mb-4 font-bold text-err">{t('run.invalidated')}</p>
             <button
               type="button"
               onClick={reset}
               className="rounded-xl bg-accent-strong px-6 py-2 font-bold text-white"
             >
-              Nouvelle run
+              {t('run.newRun')}
             </button>
           </div>
         ) : (
           typing && (
             <>
               {status === 'paused' && (
-                <p className="text-center text-sm text-muted">En pause — clique dans le texte pour reprendre.</p>
+                <p className="text-center text-sm text-muted">{t('run.paused')}</p>
               )}
               <TypingArea state={typing} disabled={status !== 'running'} onChar={handleChar} onBackspace={backspace} />
               <RunControls />
@@ -98,14 +100,14 @@ export function DevPage() {
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-8">
       <div>
-        <h1 className="text-2xl font-bold">Mode Dev</h1>
+        <h1 className="text-2xl font-bold">{t('dev.title')}</h1>
         <p className="mt-1 text-sm text-muted">
-          Tape du code le plus vite possible. Code tapé brut — multiplicateur ×1,4. Entrée valide les sauts de ligne, l'indentation est automatique.
+          {t('dev.subtitle')}
         </p>
       </div>
 
       <section>
-        <p className="mb-2 text-sm font-semibold text-muted">Langage</p>
+        <p className="mb-2 text-sm font-semibold text-muted">{t('dev.language')}</p>
         <div className="flex gap-2">
           {CODE_LANGUAGES.map((l) => (
             <button
@@ -123,9 +125,9 @@ export function DevPage() {
       </section>
 
       <section>
-        <p className="mb-2 text-sm font-semibold text-muted">Longueur</p>
+        <p className="mb-2 text-sm font-semibold text-muted">{t('dev.length')}</p>
         <div className="flex flex-wrap gap-2">
-          {LENGTHS.map(({ value, label }) => (
+          {LENGTHS.map(({ value, key }) => (
             <button
               key={value}
               type="button"
@@ -134,7 +136,7 @@ export function DevPage() {
                 length === value ? 'border-accent bg-accent/15 text-text' : 'border-line text-muted'
               }`}
             >
-              {label}
+              {t(key)}
             </button>
           ))}
         </div>
@@ -145,7 +147,7 @@ export function DevPage() {
         onClick={begin}
         className="rounded-xl bg-accent-strong px-8 py-3 text-lg font-bold text-white transition-opacity hover:opacity-90"
       >
-        Démarrer
+        {t('dev.start')}
       </button>
     </div>
   );

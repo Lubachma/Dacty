@@ -10,29 +10,31 @@ import { RunHud } from '@/ui/components/RunHud';
 import { ResultsScreen } from '@/ui/components/ResultsScreen';
 import { Toggle } from '@/ui/components/Toggle';
 import { playError, playKey, playSuccess } from '@/ui/sounds';
-import { pick } from '@/i18n';
+import { pick, useT } from '@/i18n';
+import type { TranslationKey } from '@/i18n/fr';
 import { pickText } from '@/texts/corpus';
 import { ALL_OPTIONS_ON, applyOptions } from '@/texts/normalize';
 import type { Language, TextLength, TextOptions } from '@/texts/types';
 
-const LENGTHS: { value: TextLength | 'quote'; label: string }[] = [
-  { value: 'short', label: 'Court' },
-  { value: 'medium', label: 'Moyen' },
-  { value: 'long', label: 'Long' },
-  { value: 'quote', label: 'Citation' },
+const LENGTHS: { value: TextLength | 'quote'; key: TranslationKey }[] = [
+  { value: 'short', key: 'play.length.short' },
+  { value: 'medium', key: 'play.length.medium' },
+  { value: 'long', key: 'play.length.long' },
+  { value: 'quote', key: 'play.length.quote' },
 ];
 
-const TOGGLES: { key: keyof TextOptions; label: string }[] = [
-  { key: 'punctuation', label: 'Ponctuation' },
-  { key: 'specialChars', label: 'Caractères spéciaux' },
-  { key: 'digits', label: 'Chiffres' },
-  { key: 'accents', label: 'Accents' },
+const TOGGLES: { key: keyof TextOptions; labelKey: TranslationKey }[] = [
+  { key: 'punctuation', labelKey: 'play.toggle.punctuation' },
+  { key: 'specialChars', labelKey: 'play.toggle.specialChars' },
+  { key: 'digits', labelKey: 'play.toggle.digits' },
+  { key: 'accents', labelKey: 'play.toggle.accents' },
 ];
 
 export function PlayPage() {
   const { status, typing, result, start, key, backspace, reset } = useRunStore();
   const profile = useSettings((s) => s.profile);
   const push = useToasts((s) => s.push);
+  const t = useT();
   const [language, setLanguage] = useState<Language>(profile.defaultLanguage);
   const [length, setLength] = useState<TextLength | 'quote'>('short');
   const [options, setOptions] = useState<TextOptions>(ALL_OPTIONS_ON);
@@ -84,20 +86,20 @@ export function PlayPage() {
         {typing && <RunHud typing={typing} live={status === 'running'} />}
         {status === 'invalidated' ? (
           <div role="alert" className="rounded-xl border border-err/40 bg-err/10 p-6 text-center">
-            <p className="mb-4 font-bold text-err">Run invalidée : la fenêtre a perdu le focus trop longtemps.</p>
+            <p className="mb-4 font-bold text-err">{t('run.invalidated')}</p>
             <button
               type="button"
               onClick={reset}
               className="rounded-xl bg-accent-strong px-6 py-2 font-bold text-white"
             >
-              Nouvelle run
+              {t('run.newRun')}
             </button>
           </div>
         ) : (
           typing && (
             <>
               {status === 'paused' && (
-                <p className="text-center text-sm text-muted">En pause — clique dans le texte pour reprendre.</p>
+                <p className="text-center text-sm text-muted">{t('run.paused')}</p>
               )}
               <TypingArea state={typing} disabled={status !== 'running'} onChar={handleChar} onBackspace={backspace} />
               <RunControls />
@@ -110,10 +112,10 @@ export function PlayPage() {
 
   return (
     <div className="mx-auto flex max-w-xl flex-col gap-8">
-      <h1 className="text-2xl font-bold">Entraînement libre</h1>
+      <h1 className="text-2xl font-bold">{t('play.title')}</h1>
 
       <section>
-        <p className="mb-2 text-sm font-semibold text-muted">Langue</p>
+        <p className="mb-2 text-sm font-semibold text-muted">{t('play.language')}</p>
         <div className="flex gap-2">
           {(['fr', 'en'] as const).map((l) => (
             <button
@@ -131,9 +133,9 @@ export function PlayPage() {
       </section>
 
       <section>
-        <p className="mb-2 text-sm font-semibold text-muted">Longueur</p>
+        <p className="mb-2 text-sm font-semibold text-muted">{t('play.length')}</p>
         <div className="flex flex-wrap gap-2">
-          {LENGTHS.map(({ value, label }) => (
+          {LENGTHS.map(({ value, key }) => (
             <button
               key={value}
               type="button"
@@ -142,22 +144,22 @@ export function PlayPage() {
                 length === value ? 'border-accent bg-accent/15 text-text' : 'border-line text-muted'
               }`}
             >
-              {label}
+              {t(key)}
             </button>
           ))}
         </div>
       </section>
 
       <section>
-        <p className="mb-2 text-sm font-semibold text-muted">Difficulté</p>
+        <p className="mb-2 text-sm font-semibold text-muted">{t('play.difficulty')}</p>
         <div className="flex flex-col gap-3">
-          {TOGGLES.map(({ key: k, label }) => (
+          {TOGGLES.map(({ key: k, labelKey }) => (
             <div key={k} className="flex items-center justify-between rounded-xl border border-line bg-surface px-4 py-2">
-              <span>{label}</span>
+              <span>{t(labelKey)}</span>
               <Toggle
                 checked={options[k]}
                 onChange={(v) => setOptions((o) => ({ ...o, [k]: v }))}
-                label={label}
+                label={t(labelKey)}
               />
             </div>
           ))}
@@ -169,7 +171,7 @@ export function PlayPage() {
         onClick={begin}
         className="rounded-xl bg-accent-strong px-8 py-3 text-lg font-bold text-white transition-opacity hover:opacity-90"
       >
-        Démarrer
+        {t('play.start')}
       </button>
     </div>
   );
