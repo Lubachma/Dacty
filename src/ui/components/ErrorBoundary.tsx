@@ -1,5 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import { Link } from 'react-router';
+import { useT } from '@/i18n';
 
 interface Props {
   children: ReactNode;
@@ -9,6 +10,31 @@ interface Props {
 
 interface State {
   hasError: boolean;
+}
+
+function ErrorFallback({ onRetry }: { onRetry: () => void }) {
+  const t = useT();
+  return (
+    <div role="alert" className="py-16 text-center">
+      <p className="text-lg font-bold text-err">{t('error.title')}</p>
+      <p className="mt-2 text-sm text-muted">{t('error.dataSafe')}</p>
+      <div className="mt-6 flex justify-center gap-3">
+        <button
+          type="button"
+          onClick={onRetry}
+          className="rounded-lg bg-accent-strong px-4 py-1.5 text-sm font-bold text-white transition-opacity hover:opacity-90"
+        >
+          {t('error.retry')}
+        </button>
+        <Link
+          to="/"
+          className="rounded-lg border border-line px-4 py-1.5 text-sm font-bold transition-colors hover:border-accent"
+        >
+          {t('error.home')}
+        </Link>
+      </div>
+    </div>
+  );
 }
 
 /** Confine une erreur de rendu à la page : header et navigation restent utilisables. */
@@ -31,26 +57,6 @@ export class ErrorBoundary extends Component<Props, State> {
 
   render(): ReactNode {
     if (!this.state.hasError) return this.props.children;
-    return (
-      <div role="alert" className="py-16 text-center">
-        <p className="text-lg font-bold text-err">Une erreur est survenue sur cette page.</p>
-        <p className="mt-2 text-sm text-muted">Tes données locales ne sont pas perdues.</p>
-        <div className="mt-6 flex justify-center gap-3">
-          <button
-            type="button"
-            onClick={() => this.setState({ hasError: false })}
-            className="rounded-lg bg-accent-strong px-4 py-1.5 text-sm font-bold text-white transition-opacity hover:opacity-90"
-          >
-            Réessayer
-          </button>
-          <Link
-            to="/"
-            className="rounded-lg border border-line px-4 py-1.5 text-sm font-bold transition-colors hover:border-accent"
-          >
-            Retour à l'accueil
-          </Link>
-        </div>
-      </div>
-    );
+    return <ErrorFallback onRetry={() => this.setState({ hasError: false })} />;
   }
 }

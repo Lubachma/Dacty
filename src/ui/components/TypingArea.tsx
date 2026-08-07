@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useT } from '@/i18n';
 import type { TypingState } from '@/engine/types';
 
 interface TypingAreaProps {
@@ -40,6 +41,7 @@ export function computeCaret(
 }
 
 export function TypingArea({ state, disabled = false, onChar, onBackspace }: TypingAreaProps) {
+  const t = useT();
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [caret, setCaret] = useState<CaretRect>({ x: 0, y: 0, h: 28 });
@@ -74,7 +76,7 @@ export function TypingArea({ state, disabled = false, onChar, onBackspace }: Typ
     >
       <input
         ref={inputRef}
-        aria-label="Zone de saisie"
+        aria-label={t('run.typingAria')}
         className="absolute h-1 w-1 opacity-0"
         autoFocus
         defaultValue=""

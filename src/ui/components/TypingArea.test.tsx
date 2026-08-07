@@ -1,7 +1,8 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createRun, typeChar } from '@/engine/typingEngine';
+import { setUiLanguage } from '@/test/i18n';
 import { computeCaret, TypingArea } from './TypingArea';
 
 function fakeEl(rects: Partial<DOMRect>[], clientLeft = 0, clientTop = 0): HTMLElement {
@@ -22,6 +23,8 @@ function fakeEl(rects: Partial<DOMRect>[], clientLeft = 0, clientTop = 0): HTMLE
 }
 
 describe('TypingArea', () => {
+  beforeEach(() => setUiLanguage('fr'));
+
   it('affiche les caractères avec leurs statuts', () => {
     const state = typeChar(createRun('ab'), 'x', 1000); // erreur sur 'a'
     render(<TypingArea state={state} onChar={() => {}} onBackspace={() => {}} />);

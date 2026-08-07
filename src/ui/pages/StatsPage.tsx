@@ -3,6 +3,7 @@ import { allRuns } from '@/db/runsRepo';
 import type { RunRecord } from '@/db/types';
 import { computeStreak } from '@/achievements/check';
 import { Sparkline } from '@/ui/components/Sparkline';
+import { useT } from '@/i18n';
 import { dailyAverages } from './statsUtils';
 
 function Card({ label, value }: { label: string; value: string }) {
@@ -15,6 +16,7 @@ function Card({ label, value }: { label: string; value: string }) {
 }
 
 export function StatsPage() {
+  const t = useT();
   const [runs, setRuns] = useState<RunRecord[] | null>(null);
   useEffect(() => {
     // IndexedDB indisponible : tableau vide → états « aucune donnée » déjà prévus
@@ -45,7 +47,7 @@ export function StatsPage() {
           WPM moyen — 30 derniers jours
         </h2>
         <div className="rounded-xl border border-line bg-surface p-4 backdrop-blur">
-          <Sparkline data={daily.map((d) => d.avgWpm)} width={760} height={80} />
+          <Sparkline data={daily.map((d) => d.avgWpm)} width={760} height={80} label={t('stats.wpmAria')} />
         </div>
       </section>
 
@@ -54,7 +56,7 @@ export function StatsPage() {
           Précision moyenne — 30 derniers jours
         </h2>
         <div className="rounded-xl border border-line bg-surface p-4 backdrop-blur">
-          <Sparkline data={daily.map((d) => d.avgAccuracy * 100)} width={760} height={80} />
+          <Sparkline data={daily.map((d) => d.avgAccuracy * 100)} width={760} height={80} label={t('stats.accuracyAria')} />
         </div>
       </section>
     </div>

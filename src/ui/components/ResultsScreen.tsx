@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion';
 import type { RecordKind, RunResult } from '@/game/runFlow';
-import { pick, useUiLanguage } from '@/i18n';
+import { pick, useT, useUiLanguage } from '@/i18n';
+import type { TranslationKey } from '@/i18n/fr';
 import { Sparkline } from './Sparkline';
 import { TierBadge } from './TierBadge';
 import type { AchievementDef } from '@/achievements/definitions';
 
-const RECORD_LABELS: Record<RecordKind, string> = {
-  wpm: 'Nouveau record de WPM !',
-  accuracy: 'Nouvelle meilleure précision !',
-  longest: 'Ta plus longue run !',
+const RECORD_KEYS: Record<RecordKind, TranslationKey> = {
+  wpm: 'results.record.wpm',
+  accuracy: 'results.record.accuracy',
+  longest: 'results.record.longest',
 };
 
 interface ResultsScreenProps {
@@ -19,6 +20,7 @@ interface ResultsScreenProps {
 
 export function ResultsScreen({ result, onReplay, onExit }: ResultsScreenProps) {
   const lang = useUiLanguage();
+  const t = useT();
   const { run } = result;
   return (
     <motion.div
@@ -32,29 +34,29 @@ export function ResultsScreen({ result, onReplay, onExit }: ResultsScreenProps) 
           <p className="font-type text-4xl font-extrabold text-accent">{run.wpm.toFixed(1)}</p>
         </div>
         <div>
-          <p className="text-xs uppercase tracking-wide text-muted">Précision</p>
-          <p className="font-type text-4xl font-extrabold">{(run.accuracy * 100).toFixed(1)} %</p>
+          <p className="text-xs uppercase tracking-wide text-muted">{t('results.accuracy')}</p>
+          <p className="font-type text-4xl font-extrabold">{(run.accuracy * 100).toFixed(1)}{t('unit.percent')}</p>
         </div>
         <div>
-          <p className="text-xs uppercase tracking-wide text-muted">Temps</p>
+          <p className="text-xs uppercase tracking-wide text-muted">{t('results.time')}</p>
           <p className="font-type text-4xl font-extrabold">{(run.durationMs / 1000).toFixed(1)} s</p>
         </div>
         <div>
-          <p className="text-xs uppercase tracking-wide text-muted">Points</p>
+          <p className="text-xs uppercase tracking-wide text-muted">{t('results.points')}</p>
           <p className="font-type text-4xl font-extrabold">{run.points}</p>
         </div>
       </div>
 
       <div>
-        <p className="mb-1 text-xs uppercase tracking-wide text-muted">WPM par seconde</p>
-        <Sparkline data={result.timeline} width={560} height={64} />
+        <p className="mb-1 text-xs uppercase tracking-wide text-muted">{t('results.wpmPerSecond')}</p>
+        <Sparkline data={result.timeline} width={560} height={64} label={t('results.sparklineAria')} />
       </div>
 
       {result.newRecords.length > 0 && (
         <ul className="flex flex-wrap gap-2">
           {result.newRecords.map((r) => (
             <li key={r} className="rounded-full border border-ok/40 bg-ok/10 px-3 py-1 text-sm text-ok">
-              {RECORD_LABELS[r]}
+              {t(RECORD_KEYS[r])}
             </li>
           ))}
         </ul>
@@ -66,14 +68,14 @@ export function ResultsScreen({ result, onReplay, onExit }: ResultsScreenProps) 
           animate={{ scale: 1 }}
           className="flex items-center gap-3 rounded-xl border border-accent/40 bg-accent/10 p-4"
         >
-          <span className="font-bold">Nouveau tier atteint :</span>
+          <span className="font-bold">{t('results.tierUp')}</span>
           <TierBadge tier={result.tierUp} />
         </motion.div>
       )}
 
       {result.newAchievements.length > 0 && (
         <div>
-          <p className="mb-2 text-xs uppercase tracking-wide text-muted">Succès débloqués</p>
+          <p className="mb-2 text-xs uppercase tracking-wide text-muted">{t('results.achievements')}</p>
           <ul className="flex flex-wrap gap-2">
             {result.newAchievements.map((a: AchievementDef) => (
               <li key={a.id} className="rounded-full border border-line bg-bg px-3 py-1 text-sm">
@@ -90,14 +92,14 @@ export function ResultsScreen({ result, onReplay, onExit }: ResultsScreenProps) 
           onClick={onReplay}
           className="rounded-xl bg-accent-strong px-6 py-2 font-bold text-white transition-opacity hover:opacity-90"
         >
-          Rejouer
+          {t('results.replay')}
         </button>
         <button
           type="button"
           onClick={onExit}
           className="rounded-xl border border-line px-6 py-2 text-muted transition-colors hover:text-text"
         >
-          Retour
+          {t('results.back')}
         </button>
       </div>
     </motion.div>

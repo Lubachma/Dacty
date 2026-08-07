@@ -4,12 +4,14 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { db } from '@/db/db';
 import { useRunStore } from '@/state/runStore';
+import { setUiLanguage } from '@/test/i18n';
 import { RunControls } from './RunControls';
 import { ALL_OPTIONS_ON } from '@/texts/normalize';
 
 const config = { mode: 'free' as const, language: 'fr' as const, textId: 'fr-001', options: ALL_OPTIONS_ON };
 
 beforeEach(async () => {
+  setUiLanguage('fr');
   await Promise.all(db.tables.map((t) => t.clear()));
   useRunStore.getState().reset();
 });

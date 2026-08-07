@@ -1,13 +1,5 @@
+import { tierLabel, useUiLanguage } from '@/i18n';
 import type { Tier } from '@/scoring/league';
-
-const LABELS: Record<Tier, string> = {
-  bronze: 'Bronze',
-  argent: 'Argent',
-  or: 'Or',
-  platine: 'Platine',
-  diamant: 'Diamant',
-  challenger: 'Challenger',
-};
 
 const COLORS: Record<Tier, string> = {
   bronze: 'bg-amber-800/30 text-amber-500 border-amber-700',
@@ -19,13 +11,10 @@ const COLORS: Record<Tier, string> = {
 };
 
 export function TierBadge({ tier }: { tier: Tier }) {
+  const lang = useUiLanguage();
   return (
     <span className={`rounded-full border px-3 py-0.5 text-xs font-bold uppercase tracking-wide ${COLORS[tier]}`}>
-      {LABELS[tier]}
+      {tierLabel(tier, lang)}
     </span>
   );
-}
-
-export function tierLabel(tier: Tier): string {
-  return LABELS[tier];
 }

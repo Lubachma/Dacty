@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { setUiLanguage } from '@/test/i18n';
 import { ErrorBoundary } from './ErrorBoundary';
 
 let shouldThrow = true;
@@ -11,6 +12,8 @@ function Bomb() {
 }
 
 describe('ErrorBoundary', () => {
+  beforeEach(() => setUiLanguage('fr'));
+
   afterEach(() => {
     shouldThrow = true;
     vi.restoreAllMocks();

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { computeAccuracy, liveWpm } from '@/engine/stats';
 import { elapsedMs } from '@/engine/typingEngine';
 import { nowMs } from '@/engine/clock';
+import { useT } from '@/i18n';
 import type { TypingState } from '@/engine/types';
 
 function Cell({ label, value }: { label: string; value: string }) {
@@ -14,6 +15,7 @@ function Cell({ label, value }: { label: string; value: string }) {
 }
 
 export function RunHud({ typing, live = true }: { typing: TypingState; live?: boolean }) {
+  const t = useT();
   const [, setTick] = useState(0);
   useEffect(() => {
     if (!live) return undefined; // en pause, les valeurs sont gelées : pas de ticker
@@ -28,9 +30,9 @@ export function RunHud({ typing, live = true }: { typing: TypingState; live?: bo
   return (
     <div className="grid grid-cols-4 gap-3">
       <Cell label="WPM" value={wpm.toFixed(0)} />
-      <Cell label="Précision" value={`${Math.round(accuracy * 100)} %`} />
-      <Cell label="Temps" value={`${seconds.toFixed(1)} s`} />
-      <Cell label="Progression" value={`${progress} %`} />
+      <Cell label={t('run.hud.accuracy')} value={`${Math.round(accuracy * 100)}${t('unit.percent')}`} />
+      <Cell label={t('run.hud.time')} value={`${seconds.toFixed(1)} s`} />
+      <Cell label={t('run.hud.progress')} value={`${progress}${t('unit.percent')}`} />
     </div>
   );
 }

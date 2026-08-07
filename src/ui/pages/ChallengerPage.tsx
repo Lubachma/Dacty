@@ -7,9 +7,9 @@ import { usePauseRunOnUnmount } from '@/ui/hooks/usePauseRunOnUnmount';
 import { TypingArea } from '@/ui/components/TypingArea';
 import { RunHud } from '@/ui/components/RunHud';
 import { ResultsScreen } from '@/ui/components/ResultsScreen';
-import { TierBadge, tierLabel } from '@/ui/components/TierBadge';
+import { TierBadge } from '@/ui/components/TierBadge';
 import { playError, playKey, playSuccess } from '@/ui/sounds';
-import { pick } from '@/i18n';
+import { pick, tierLabel, useUiLanguage } from '@/i18n';
 import { getOfficialTexts } from '@/texts/corpus';
 import { ALL_OPTIONS_ON, applyOptions } from '@/texts/normalize';
 import { getProgress } from '@/db/challengerRepo';
@@ -20,6 +20,7 @@ import { isCodeLanguage, LANGUAGE_LABELS, type Language } from '@/texts/types';
 const dateFmt = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' });
 
 function LeagueCard({ progress }: { progress: ChallengerProgress }) {
+  const lang = useUiLanguage();
   const next = nextTier(progress.tier);
   const base = progress.tier ? TIER_THRESHOLDS[progress.tier] : 0;
   const pct = next ? Math.min(100, Math.round(((progress.total - base) / (next.threshold - base)) * 100)) : 100;
@@ -39,7 +40,7 @@ function LeagueCard({ progress }: { progress: ChallengerProgress }) {
             <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${pct}%` }} />
           </div>
           <p className="mt-1 text-xs text-muted">
-            {progress.total} / {next.threshold} pts pour {tierLabel(next.tier)}
+            {progress.total} / {next.threshold} pts pour {tierLabel(next.tier, lang)}
           </p>
         </div>
       )}
@@ -47,7 +48,7 @@ function LeagueCard({ progress }: { progress: ChallengerProgress }) {
         <ul className="flex flex-col gap-1 border-t border-line pt-2 text-xs text-muted">
           {progress.tierHistory.map((h) => (
             <li key={h.at}>
-              {tierLabel(h.tier)} atteint le {dateFmt.format(h.at)}
+              {tierLabel(h.tier, lang)} atteint le {dateFmt.format(h.at)}
             </li>
           ))}
         </ul>
@@ -96,7 +97,7 @@ export function ChallengerPage() {
       }),
     );
     if (result.tierUp) {
-      push({ title: `Nouveau tier : ${tierLabel(result.tierUp)}`, kind: 'info' });
+      push({ title: `Nouveau tier : ${tierLabel(result.tierUp, profile.uiLanguage)}`, kind: 'info' });
       playSuccess();
     }
   }, [result, refresh, push, profile.uiLanguage]);
