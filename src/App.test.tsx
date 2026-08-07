@@ -1,10 +1,15 @@
 import 'fake-indexeddb/auto';
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { updateProfile } from '@/db/profileRepo';
 import { setUiLanguage } from '@/test/i18n';
 import App from './App';
 
-beforeEach(() => setUiLanguage('fr'));
+beforeEach(async () => {
+  setUiLanguage('fr');
+  // App.load() relit le profil depuis IndexedDB : y persister la langue pour qu'elle survive au chargement
+  await updateProfile({ uiLanguage: 'fr' });
+});
 
 describe('App', () => {
   it('rend la page d\'accueil', async () => {
