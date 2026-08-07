@@ -1,7 +1,7 @@
 import 'fake-indexeddb/auto';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { db } from './db';
-import { allRuns, personalBests, rankFor, runCount, saveRun, topRuns } from './runsRepo';
+import { allRuns, personalBests, rankFor, recentRuns, runCount, saveRun, topRuns } from './runsRepo';
 import type { RunRecord } from './types';
 
 const opts = { punctuation: true, specialChars: true, digits: true, accents: true };
@@ -66,6 +66,12 @@ describe('runsRepo', () => {
 
   it('personalBests retourne trois null sur base vide', async () => {
     expect(await personalBests()).toEqual({ bestWpm: null, bestAccuracy: null, longestRun: null });
+  });
+
+  it('recentRuns retourne les N plus récentes, ordre décroissant', async () => {
+    for (let i = 1; i <= 7; i++) await saveRun(makeRun({ date: i }));
+    const recent = await recentRuns(3);
+    expect(recent.map((r) => r.date)).toEqual([7, 6, 5]);
   });
 
   it('écarte les lignes corrompues à la lecture, avec avertissement', async () => {

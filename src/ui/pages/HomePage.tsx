@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { motion } from 'framer-motion';
-import { allRuns } from '@/db/runsRepo';
+import { recentRuns } from '@/db/runsRepo';
 import { getProgress } from '@/db/challengerRepo';
 import type { ChallengerProgress, RunRecord } from '@/db/types';
 import { TierBadge } from '@/ui/components/TierBadge';
@@ -35,8 +35,8 @@ export function HomePage() {
         .then((p) => setProgress((s) => ({ ...s, [lang]: p })))
         .catch(() => { /* IndexedDB indisponible : progression masquée */ });
     }
-    void allRuns()
-      .then((runs) => setRecent(runs.sort((a, b) => b.date - a.date).slice(0, 5)))
+    void recentRuns(5)
+      .then(setRecent)
       .catch(() => { /* IndexedDB indisponible : liste vide déjà gérée */ });
   }, []);
 

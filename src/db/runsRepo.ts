@@ -60,6 +60,10 @@ export async function allRuns(): Promise<RunRecord[]> {
   return parseRuns(await db.runs.toArray());
 }
 
+export async function recentRuns(limit = 5): Promise<RunRecord[]> {
+  return parseRuns(await db.runs.orderBy('date').reverse().limit(limit).toArray());
+}
+
 export function runCount(): Promise<number> {
   return db.runs.count();
 }
