@@ -32,7 +32,7 @@ Spec : `docs/superpowers/specs/2026-08-07-run-controls-design.md`
 - Consumes: `useRunStore` — `start(config, text)`, `reset()`, `config`, `typing?.text`.
 - Produces: `RunControls` (sans props). Consommé par `PlayPage` et `DevPage`.
 
-- [ ] **Step 1: Écrire le test qui échoue** — `src/ui/components/RunControls.test.tsx`
+- [x] **Step 1: Écrire le test qui échoue** — `src/ui/components/RunControls.test.tsx`
 
 ```tsx
 import 'fake-indexeddb/auto';
@@ -91,12 +91,12 @@ describe('RunControls', () => {
 });
 ```
 
-- [ ] **Step 2: Vérifier que le test échoue**
+- [x] **Step 2: Vérifier que le test échoue**
 
 Run: `npx vitest run src/ui/components/RunControls.test.tsx`
 Expected: FAIL — `./RunControls` n'existe pas.
 
-- [ ] **Step 3: Implémenter le composant** — `src/ui/components/RunControls.tsx`
+- [x] **Step 3: Implémenter le composant** — `src/ui/components/RunControls.tsx`
 
 ```tsx
 import { useRunStore } from '@/state/runStore';
@@ -133,7 +133,7 @@ export function RunControls() {
 }
 ```
 
-- [ ] **Step 4: Brancher dans les deux pages** — après `<TypingArea />` dans la vue run
+- [x] **Step 4: Brancher dans les deux pages** — après `<TypingArea />` dans la vue run
 (branche `running | paused`, pas `invalidated`).
 
 `src/ui/pages/PlayPage.tsx` :
@@ -150,12 +150,12 @@ chacune :
 import { RunControls } from '@/ui/components/RunControls';
 ```
 
-- [ ] **Step 5: Vérifier que les tests passent**
+- [x] **Step 5: Vérifier que les tests passent**
 
 Run: `npx vitest run src/ui/components/RunControls.test.tsx src/ui/pages/PlayPage.test.tsx src/ui/pages/DevPage.test.tsx`
 Expected: tous PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add src/ui/components/RunControls.tsx src/ui/components/RunControls.test.tsx src/ui/pages/PlayPage.tsx src/ui/pages/DevPage.tsx
@@ -166,17 +166,17 @@ git commit -m "feat: stop and restart buttons during training runs"
 
 ### Task 2: Vérification finale
 
-- [ ] **Step 1: Suite complète**
+- [x] **Step 1: Suite complète**
 
 Run: `npm run test`
 Expected: 154 tests PASS (151 + 3 nouveaux).
 
-- [ ] **Step 2: Build**
+- [x] **Step 2: Build**
 
 Run: `npm run build`
 Expected: `tsc --noEmit` et `vite build` verts.
 
-- [ ] **Step 3: Cocher les cases du plan et commit final si nécessaire**
+- [x] **Step 3: Cocher les cases du plan et commit final si nécessaire**
 
 ```bash
 git add docs/superpowers/plans/2026-08-07-run-controls.md
