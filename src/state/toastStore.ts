@@ -8,6 +8,7 @@ export interface Toast {
 }
 
 let nextId = 1;
+const MAX_TOASTS = 3;
 
 interface ToastStore {
   toasts: Toast[];
@@ -19,7 +20,8 @@ export const useToasts = create<ToastStore>((set) => ({
   toasts: [],
   push(t) {
     const id = nextId++;
-    set((s) => ({ toasts: [...s.toasts, { ...t, id }] }));
+    // borne la pile : au-delà de MAX_TOASTS, les plus anciens sont éjectés
+    set((s) => ({ toasts: [...s.toasts.slice(-(MAX_TOASTS - 1)), { ...t, id }] }));
     setTimeout(() => {
       set((s) => ({ toasts: s.toasts.filter((x) => x.id !== id) }));
     }, 5000);

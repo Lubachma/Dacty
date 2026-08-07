@@ -18,4 +18,14 @@ describe('toastStore', () => {
     expect(useToasts.getState().toasts).toHaveLength(0);
     vi.useRealTimers();
   });
+
+  it('borne la pile à 3 toasts en éjectant les plus anciens', () => {
+    vi.useFakeTimers();
+    for (const title of ['a', 'b', 'c', 'd']) {
+      useToasts.getState().push({ title, kind: 'info' });
+    }
+    const titles = useToasts.getState().toasts.map((t) => t.title);
+    expect(titles).toEqual(['b', 'c', 'd']);
+    vi.useRealTimers();
+  });
 });
