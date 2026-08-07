@@ -4,11 +4,13 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { MemoryRouter } from 'react-router';
 import { db } from '@/db/db';
 import { saveRun } from '@/db/runsRepo';
+import { setUiLanguage } from '@/test/i18n';
 import { LeaderboardPage } from './LeaderboardPage';
 
 const opts = { punctuation: true, specialChars: true, digits: true, accents: true };
 
 beforeEach(async () => {
+  setUiLanguage('fr');
   await Promise.all(db.tables.map((t) => t.clear()));
   await saveRun({
     date: Date.now(), mode: 'free', language: 'fr', textId: 'fr-001', options: opts,

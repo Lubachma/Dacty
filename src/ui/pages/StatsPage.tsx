@@ -3,7 +3,7 @@ import { allRuns } from '@/db/runsRepo';
 import type { RunRecord } from '@/db/types';
 import { computeStreak } from '@/achievements/check';
 import { Sparkline } from '@/ui/components/Sparkline';
-import { useT } from '@/i18n';
+import { localeFor, useT, useUiLanguage } from '@/i18n';
 import { dailyAverages } from './statsUtils';
 
 function Card({ label, value }: { label: string; value: string }) {
@@ -17,6 +17,7 @@ function Card({ label, value }: { label: string; value: string }) {
 
 export function StatsPage() {
   const t = useT();
+  const lang = useUiLanguage();
   const [runs, setRuns] = useState<RunRecord[] | null>(null);
   useEffect(() => {
     // IndexedDB indisponible : tableau vide → états « aucune donnée » déjà prévus
@@ -32,19 +33,19 @@ export function StatsPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-bold">Statistiques</h1>
+      <h1 className="text-2xl font-bold">{t('stats.title')}</h1>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-        <Card label="Runs" value={String(runs.length)} />
-        <Card label="Caractères" value={totalChars.toLocaleString('fr-FR')} />
-        <Card label="WPM moyen" value={mean((r) => r.wpm).toFixed(1)} />
-        <Card label="Précision moyenne" value={`${(mean((r) => r.accuracy) * 100).toFixed(1)} %`} />
-        <Card label="Série" value={`${streak} j`} />
+        <Card label={t('stats.runs')} value={String(runs.length)} />
+        <Card label={t('stats.chars')} value={totalChars.toLocaleString(localeFor(lang))} />
+        <Card label={t('stats.avgWpm')} value={mean((r) => r.wpm).toFixed(1)} />
+        <Card label={t('stats.avgAccuracy')} value={`${(mean((r) => r.accuracy) * 100).toFixed(1)}${t('unit.percent')}`} />
+        <Card label={t('stats.streak')} value={`${streak}${t('unit.day')}`} />
       </div>
 
       <section>
         <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">
-          WPM moyen — 30 derniers jours
+          {t('stats.avgWpm30')}
         </h2>
         <div className="rounded-xl border border-line bg-surface p-4 backdrop-blur">
           <Sparkline data={daily.map((d) => d.avgWpm)} width={760} height={80} label={t('stats.wpmAria')} />
@@ -53,7 +54,7 @@ export function StatsPage() {
 
       <section>
         <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">
-          Précision moyenne — 30 derniers jours
+          {t('stats.avgAccuracy30')}
         </h2>
         <div className="rounded-xl border border-line bg-surface p-4 backdrop-blur">
           <Sparkline data={daily.map((d) => d.avgAccuracy * 100)} width={760} height={80} label={t('stats.accuracyAria')} />
