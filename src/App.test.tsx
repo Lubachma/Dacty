@@ -18,4 +18,17 @@ describe('App', () => {
     expect(screen.getByRole('link', { name: 'Dacty' })).toBeInTheDocument();
     expect(await screen.findByRole('heading', { name: 'Succès' })).toBeInTheDocument();
   });
+
+  it('définit le titre de l\'onglet selon la route', async () => {
+    window.history.pushState({}, '', '/');
+    const { unmount } = render(<App />);
+    expect(await screen.findByRole('heading', { name: /Dacty/ })).toBeInTheDocument();
+    expect(document.title).toBe('Dacty');
+    unmount();
+
+    window.history.pushState({}, '', '/settings');
+    render(<App />);
+    expect(await screen.findByRole('heading', { name: 'Réglages' })).toBeInTheDocument();
+    expect(document.title).toBe('Réglages · Dacty');
+  });
 });

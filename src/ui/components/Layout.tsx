@@ -5,6 +5,18 @@ import { Header } from './Header';
 import { ToastHost } from './ToastHost';
 import { checkPersistence, requestPersistence } from '@/db/persistence';
 
+// titres d'onglet alignés sur les <h1> des pages
+const TITLES: Record<string, string> = {
+  '/': 'Dacty',
+  '/play': 'Entraînement libre · Dacty',
+  '/dev': 'Mode Dev · Dacty',
+  '/challenger': 'Mode Challenger · Dacty',
+  '/leaderboard': 'Classements · Dacty',
+  '/achievements': 'Succès · Dacty',
+  '/stats': 'Statistiques · Dacty',
+  '/settings': 'Réglages · Dacty',
+};
+
 export function Layout() {
   const [persistent, setPersistent] = useState(true);
   const location = useLocation();
@@ -18,6 +30,9 @@ export function Layout() {
       active = false;
     };
   }, []);
+  useEffect(() => {
+    document.title = TITLES[location.pathname] ?? 'Dacty';
+  }, [location.pathname]);
   return (
     <div className="min-h-screen">
       <Header />
