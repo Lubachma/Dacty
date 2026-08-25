@@ -6,6 +6,8 @@
 
 **Le speedrun dactylo.** Tape des textes le plus vite possible, grimpe la ligue Challenger, débloque les succès.
 
+**[▶ Essayer en ligne](https://lubachma.github.io/Dacty/)** — rien à installer, pas de compte.
+
 100 % local — tes données restent dans ton navigateur (IndexedDB). Interface bilingue (français/anglais), détectée au premier lancement et modifiable dans les réglages.
 
 [![CI](https://github.com/Lubachma/Dacty/actions/workflows/ci.yml/badge.svg)](https://github.com/Lubachma/Dacty/actions/workflows/ci.yml)

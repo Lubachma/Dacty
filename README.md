@@ -6,6 +6,8 @@
 
 **The typing speedrun trainer.** Type texts as fast as you can, climb the Challenger league, unlock achievements.
 
+**[▶ Try it live](https://lubachma.github.io/Dacty/)** — nothing to install, no account.
+
 100 % local — your data stays in your browser (IndexedDB). Bilingual interface (English/French), detected from your browser on first launch and switchable in the settings.
 
 [![CI](https://github.com/Lubachma/Dacty/actions/workflows/ci.yml/badge.svg)](https://github.com/Lubachma/Dacty/actions/workflows/ci.yml)
