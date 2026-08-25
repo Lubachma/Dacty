@@ -35,11 +35,11 @@ export function HomePage() {
     for (const lang of ['fr', 'en', 'c', 'python'] as const) {
       void getProgress(lang)
         .then((p) => setProgress((s) => ({ ...s, [lang]: p })))
-        .catch(() => { /* IndexedDB indisponible : progression masquée */ });
+        .catch(() => { /* IndexedDB unavailable: progress hidden */ });
     }
     void recentRuns(5)
       .then(setRecent)
-      .catch(() => { /* IndexedDB indisponible : liste vide déjà gérée */ });
+      .catch(() => { /* IndexedDB unavailable: empty list already handled */ });
   }, []);
 
   return (

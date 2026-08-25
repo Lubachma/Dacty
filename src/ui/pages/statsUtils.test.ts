@@ -12,7 +12,7 @@ function run(date: number, wpm: number, accuracy: number): RunRecord {
 }
 
 describe('dailyAverages', () => {
-  const now = new Date(2026, 5, 15, 20, 0).getTime(); // 15 juin 2026
+  const now = new Date(2026, 5, 15, 20, 0).getTime(); // June 15, 2026
 
   it('produit un seau par jour, 0 les jours sans run', () => {
     const stats = dailyAverages([], 3, now);

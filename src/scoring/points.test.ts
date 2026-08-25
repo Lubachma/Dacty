@@ -16,7 +16,7 @@ describe('points', () => {
     expect(challengerPoints(60, 0.97, ALL_OPTIONS_ON)).toBe(79);
     // 100 WPM, 99%, x1.4 = 137.2 -> 137
     expect(challengerPoints(100, 0.99, ALL_OPTIONS_ON)).toBe(137);
-    // sans toggles : 50 × 1 × 1 = 50
+    // no toggles: 50 × 1 × 1 = 50
     expect(challengerPoints(50, 1, { punctuation: false, specialChars: false, digits: false, accents: false }))
       .toBe(50);
   });

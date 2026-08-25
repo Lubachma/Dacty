@@ -52,17 +52,17 @@ export function buildRunRecord(state: TypingState, config: RunConfig, now: numbe
 }
 
 /**
- * `now` est l'horloge MURALE (Date.now) : elle date le record (streaks, stats par jour).
- * La durée vient des timestamps moteur (horloge monotone, voir @/engine/clock) via
- * `finishedAt` — toujours renseigné sur une run terminée : le repli `?? now`
- * d'`elapsedMs` et ceux de `wpmTimeline` ne servent pas sur ce chemin.
+ * `now` is the WALL-CLOCK time (Date.now): it timestamps the record (streaks, daily stats).
+ * Duration comes from engine timestamps (monotonic clock, see @/engine/clock) via
+ * `finishedAt` — always set on a finished run: the `?? now` fallback in `elapsedMs`
+ * and in `wpmTimeline` is never actually needed on this path.
  */
 export async function completeRun(state: TypingState, config: RunConfig, now: number): Promise<RunResult> {
   const run = buildRunRecord(state, config, now);
   const { durationMs, wpm, accuracy, points } = run;
 
-  // une seule transaction rw sur les 3 tables : run, progression challenger et succès
-  // sont persistés ensemble ou pas du tout — jamais d'état partiel si une étape échoue
+  // a single rw transaction across the 3 tables: run, challenger progress, and achievements
+  // are persisted together or not at all — never a partial state if a step fails
   return db.transaction('rw', [db.runs, db.challenger, db.achievements], async () => {
     const bests = await personalBests();
     const newRecords: RecordKind[] = [];

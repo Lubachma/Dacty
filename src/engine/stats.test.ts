@@ -22,9 +22,9 @@ describe('stats', () => {
   });
 
   it('liveWpm utilise le temps écoulé réel', () => {
-    let s = createRun('abcdefghij'); // 10 car.
+    let s = createRun('abcdefghij'); // 10 chars.
     for (let i = 0; i < 10; i++) s = typeChar(s, 'abcdefghij'[i], 1000 + i * 600);
-    // 10 car. corrects en 5400ms -> (10/5)/(5.4/60) = 22.22 WPM
+    // 10 correct chars in 5400ms -> (10/5)/(5.4/60) = 22.22 WPM
     expect(liveWpm(s, 6400)).toBeCloseTo(22.22, 1);
   });
 
@@ -35,7 +35,7 @@ describe('stats', () => {
       { at: 900, kind: 'char' as const, correct: false },
       { at: 1100, kind: 'char' as const, correct: true },
     ];
-    // seau 0-1000 : 2 corrects -> (2/5)*60 = 24 WPM ; seau 1000-2000 : 1 correct -> 12 WPM
+    // bucket 0-1000: 2 correct -> (2/5)*60 = 24 WPM; bucket 1000-2000: 1 correct -> 12 WPM
     expect(wpmTimeline(events, 0, 2000)).toEqual([24, 12]);
   });
 

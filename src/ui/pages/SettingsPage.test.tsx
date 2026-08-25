@@ -21,7 +21,7 @@ describe('SettingsPage', () => {
     const input = await screen.findByLabelText('Pseudo');
     await userEvent.clear(input);
     await userEvent.type(input, 'Ludo');
-    await userEvent.tab(); // blur -> sauvegarde
+    await userEvent.tab(); // blur -> saves
     expect((await getProfile()).pseudo).toBe('Ludo');
     expect(useSettings.getState().profile.pseudo).toBe('Ludo');
   });
@@ -34,7 +34,7 @@ describe('SettingsPage', () => {
   });
 
   it('resynchronise le pseudo quand le profil se charge', async () => {
-    // simule un deep-link : le profil n'est pas encore chargé au mount
+    // simulates a deep link: the profile isn't loaded yet at mount
     useSettings.setState((s) => ({ profile: { ...s.profile, pseudo: 'Joueur' }, loaded: false }));
     render(<MemoryRouter><SettingsPage /></MemoryRouter>);
     expect(screen.getByLabelText('Pseudo')).toHaveValue('Joueur');
@@ -46,13 +46,13 @@ describe('SettingsPage', () => {
 
   it('bascule la langue de l’interface et persiste', async () => {
     render(<MemoryRouter><SettingsPage /></MemoryRouter>);
-    // deux rows ont des boutons autonymes : on cible celle de la langue d'interface
+    // two rows have buttons named after their own value: target the interface-language one
     const uiLangRow = (await screen.findByText("Langue de l'interface")).parentElement!;
     await userEvent.click(within(uiLangRow).getByRole('button', { name: 'English' }));
     expect(useSettings.getState().profile.uiLanguage).toBe('en');
     expect(document.documentElement.lang).toBe('en');
     expect((await getProfile()).uiLanguage).toBe('en');
-    // l'UI bascule immédiatement
+    // the UI switches immediately
     expect(await screen.findByRole('heading', { name: 'Settings' })).toBeInTheDocument();
   });
 

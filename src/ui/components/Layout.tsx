@@ -7,7 +7,7 @@ import { checkPersistence, requestPersistence } from '@/db/persistence';
 import { useT } from '@/i18n';
 import type { TranslationKey } from '@/i18n/fr';
 
-// titres d'onglet alignés sur les <h1> des pages
+// tab titles aligned with each page's <h1>
 const TITLE_KEYS: Record<string, TranslationKey> = {
   '/': 'title.home',
   '/play': 'title.play',

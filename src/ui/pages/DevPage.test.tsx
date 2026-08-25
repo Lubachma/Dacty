@@ -25,6 +25,6 @@ describe('DevPage', () => {
     const state = useRunStore.getState();
     expect(state.config?.mode).toBe('free');
     expect(['c', 'python']).toContain(state.config?.language);
-    expect(state.typing?.text).toContain('\n'); // code brut, multi-lignes préservé
+    expect(state.typing?.text).toContain('\n'); // raw code, multi-line preserved
   });
 });

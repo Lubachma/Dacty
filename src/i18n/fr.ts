@@ -1,4 +1,4 @@
-// Source de vérité des clés de traduction : toute clé ajoutée ici doit exister en anglais.
+// Source of truth for translation keys: any key added here must also exist in English.
 export const fr = {
   'common.loading': 'Chargement…',
   'common.unranked': 'Non classé',

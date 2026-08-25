@@ -26,8 +26,8 @@ export function typeChar(state: TypingState, char: string, now: number, syntheti
   const correct = state.text[state.cursor] === char;
   const statuses = state.statuses.slice();
   statuses[state.cursor] = correct ? 'correct' : 'incorrect';
-  // synthetic (auto-indentation) : ni frappe ni événement, pour ne pas gonfler
-  // la précision ni la timeline — le caractère est toujours celui attendu
+  // synthetic (auto-indentation): neither a keystroke nor an event, so it doesn't inflate
+  // accuracy or the timeline — the character is always the expected one
   const next: TypingState = {
     ...state,
     statuses,

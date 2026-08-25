@@ -2,9 +2,9 @@ import { useRunStore } from '@/state/runStore';
 import { useT } from '@/i18n';
 
 /**
- * Actions pendant une run d'entraînement :
- * « Recommencer » relance le même texte à zéro, « Arrêter » abandonne (rien n'est
- * enregistré). Rend null hors run — le parent ne l'affiche que pendant la run.
+ * Actions during a training run:
+ * "Restart" replays the same text from scratch, "Stop" abandons it (nothing is
+ * saved). Renders null outside a run — the parent only shows it during the run.
  */
 export function RunControls() {
   const t = useT();

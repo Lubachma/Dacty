@@ -20,7 +20,7 @@ export function StatsPage() {
   const lang = useUiLanguage();
   const [runs, setRuns] = useState<RunRecord[] | null>(null);
   useEffect(() => {
-    // IndexedDB indisponible : tableau vide → états « aucune donnée » déjà prévus
+    // IndexedDB unavailable: empty array → "no data" states already handled
     void allRuns().then(setRuns).catch(() => setRuns([]));
   }, []);
 

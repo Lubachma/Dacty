@@ -7,7 +7,7 @@ import App from './App';
 
 beforeEach(async () => {
   setUiLanguage('fr');
-  // App.load() relit le profil depuis IndexedDB : y persister la langue pour qu'elle survive au chargement
+  // App.load() re-reads the profile from IndexedDB: persist the language there so it survives the load
   await updateProfile({ uiLanguage: 'fr' });
 });
 
@@ -21,7 +21,7 @@ describe('App', () => {
   it('affiche un fallback pendant le chargement d\'une page lazy, header visible', async () => {
     window.history.pushState({}, '', '/achievements');
     render(<App />);
-    // chunk pas encore résolu : fallback dans <main>, header toujours présent
+    // chunk not yet resolved: fallback inside <main>, header still present
     expect(screen.getByText('Chargement…')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Dacty' })).toBeInTheDocument();
     expect(await screen.findByRole('heading', { name: 'Succès' })).toBeInTheDocument();

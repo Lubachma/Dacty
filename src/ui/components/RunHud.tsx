@@ -18,7 +18,7 @@ export function RunHud({ typing, live = true }: { typing: TypingState; live?: bo
   const t = useT();
   const [, setTick] = useState(0);
   useEffect(() => {
-    if (!live) return undefined; // en pause, les valeurs sont gelées : pas de ticker
+    if (!live) return undefined; // paused: values are frozen, no ticker needed
     const id = setInterval(() => setTick((t) => t + 1), 500);
     return () => clearInterval(id);
   }, [live]);

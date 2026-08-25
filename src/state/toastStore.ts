@@ -20,7 +20,7 @@ export const useToasts = create<ToastStore>((set) => ({
   toasts: [],
   push(t) {
     const id = nextId++;
-    // borne la pile : au-delà de MAX_TOASTS, les plus anciens sont éjectés
+    // caps the stack: beyond MAX_TOASTS, the oldest ones are evicted
     set((s) => ({ toasts: [...s.toasts.slice(-(MAX_TOASTS - 1)), { ...t, id }] }));
     setTimeout(() => {
       set((s) => ({ toasts: s.toasts.filter((x) => x.id !== id) }));

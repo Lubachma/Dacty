@@ -2,7 +2,7 @@
   "name": "dacty",
   "private": true,
   "version": "0.1.0",
-  "description": "Speedrun dactylo : entraînement, mode code C/Python, ligue Challenger et succès — 100 % local",
+  "description": "Typing speedrun trainer: free practice, C/Python code mode, ranked Challenger league and achievements — 100% local",
   "author": "Ludovic Bachmann",
   "license": "MIT",
   "repository": {

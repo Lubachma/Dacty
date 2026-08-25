@@ -1,8 +1,8 @@
 import type { UiLanguage } from './types';
 
 /**
- * Langue d'interface par défaut : français si le navigateur est francophone,
- * anglais sinon (public international). Gardée pour les environnements sans navigateur.
+ * Default interface language: French if the browser is French-speaking,
+ * English otherwise (international audience). Kept for environments without a browser.
  */
 export function detectUiLanguage(): UiLanguage {
   if (typeof navigator === 'undefined' || typeof navigator.language !== 'string') return 'en';

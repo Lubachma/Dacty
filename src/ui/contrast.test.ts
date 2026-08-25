@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-// Épingle les ratios WCAG 2.1 des paires de couleurs du thème : les valeurs sont lues
-// directement dans src/index.css — toute régression de contraste casse ce test.
+// Pins the WCAG 2.1 contrast ratios for the theme's color pairs: the values are read
+// directly from src/index.css — any contrast regression breaks this test.
 const css = readFileSync('src/index.css', 'utf8');
 const root = /:root\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';
 const light = /html\[data-theme="light"\]\s*\{([^}]*)\}/.exec(css)?.[1] ?? '';

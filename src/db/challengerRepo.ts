@@ -27,7 +27,7 @@ export async function recordChallengerResult(
     ...current.bestByText,
     [textId]: Math.max(current.bestByText[textId] ?? 0, points),
   };
-  // la couche db ne connaît pas le corpus : les ids officiels sont injectés par l'appelant
+  // the db layer doesn't know about the corpus: official ids are injected by the caller
   const official = new Set(officialIds);
   const total = Object.entries(bestByText)
     .filter(([id]) => official.has(id))

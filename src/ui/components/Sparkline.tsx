@@ -2,7 +2,7 @@ interface SparklineProps {
   data: number[];
   width?: number;
   height?: number;
-  /** texte d'accessibilité du graphe (traduit par l'appelant) */
+  /** accessible text for the chart (translated by the caller) */
   label: string;
 }
 

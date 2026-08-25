@@ -20,7 +20,7 @@ export async function getProfile(): Promise<Profile> {
   if (raw) {
     const parsed = profileSchema.safeParse(raw);
     if (parsed.success) return parsed.data;
-    // donnée corrompue : on réinitialise sans planter
+    // corrupted data: reset without crashing
   }
   const now = Date.now();
   const fresh: Profile = { ...DEFAULT_PROFILE, createdAt: now, lastActiveAt: now };

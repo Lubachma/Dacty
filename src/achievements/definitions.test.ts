@@ -120,7 +120,7 @@ describe('definitions', () => {
     const goldC = { ...emptyProgress('c' as Language), tier: 'or' as const };
     const progress = { fr: emptyProgress('fr'), en: emptyProgress('en'), c: goldC, python: emptyProgress('python') };
     expect(def('gold-any').isUnlocked(ctx({ progress }))).toBe(true);
-    expect(def('gold-both').isUnlocked(ctx({ progress }))).toBe(false); // gold-both reste fr+en
+    expect(def('gold-both').isUnlocked(ctx({ progress }))).toBe(false); // gold-both stays fr+en
   });
 
   it('no-backspace exige zéro backspace sur au moins 30 caractères', () => {

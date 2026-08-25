@@ -6,9 +6,9 @@ describe('Sparkline', () => {
   it('rend une polyline normalisée', () => {
     const { container } = render(<Sparkline data={[10, 20, 10]} width={100} height={40} label="Évolution du WPM" />);
     const line = container.querySelector('polyline');
-    // y = 40 - (v/20)*36 - 2 -> v=10 : 20 ; v=20 : 2
+    // y = 40 - (v/20)*36 - 2 -> v=10: 20; v=20: 2
     expect(line?.getAttribute('points')).toBe('0,20 50,2 100,20');
-    // le label est exposé via aria-label sur le svg
+    // the label is exposed via aria-label on the svg
     expect(container.querySelector('svg')?.getAttribute('aria-label')).toBe('Évolution du WPM');
   });
 

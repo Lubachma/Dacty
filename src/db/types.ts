@@ -17,7 +17,7 @@ export interface RunRecord {
   points: number;
   errors: number;
   backspaces: number;
-  /** nombre de caractères du texte tapé */
+  /** number of characters in the typed text */
   chars: number;
   noBackspace: boolean;
 }
@@ -28,7 +28,7 @@ export interface Profile {
   theme: 'dark' | 'light';
   sounds: boolean;
   defaultLanguage: Language;
-  /** langue de l'interface, indépendante de la langue des textes */
+  /** interface language, independent of the texts' language */
   uiLanguage: UiLanguage;
   focusTimeoutSec: number;
   createdAt: number;

@@ -15,7 +15,7 @@ export class DactyDB extends Dexie {
       achievements: 'id, unlockedAt',
       challenger: 'language',
     });
-    // v2 : index de lecture pour personalBests — additif, aucune migration de données
+    // v2: read index for personalBests — additive, no data migration
     this.version(2).stores({
       runs: '++id, date, mode, language, textId, [mode+language+textId], wpm, accuracy, chars',
     });

@@ -3,7 +3,7 @@ export type CharStatus = 'pending' | 'correct' | 'incorrect';
 export interface KeystrokeEvent {
   at: number;
   kind: 'char' | 'backspace';
-  /** true pour un caractère correct ou un backspace (non une « réussite », juste pas une erreur) */
+  /** true for a correct character or a backspace (not a "success", just not an error) */
   correct: boolean;
 }
 
@@ -11,10 +11,10 @@ export interface TypingState {
   text: string;
   statuses: CharStatus[];
   cursor: number;
-  /** erreurs commises, y compris corrigées ensuite */
+  /** errors made, including ones later corrected */
   errors: number;
   backspaces: number;
-  /** frappes de caractères (hors backspace) */
+  /** character keystrokes (excluding backspace) */
   keystrokes: number;
   events: KeystrokeEvent[];
   startedAt: number | null;

@@ -16,7 +16,7 @@ beforeEach(async () => {
 describe('usePauseRunOnUnmount', () => {
   it('met en pause une run en cours au démontage de la page', () => {
     useRunStore.getState().start(config, 'ab');
-    useRunStore.getState().key('a'); // démarre le chrono
+    useRunStore.getState().key('a'); // starts the clock
     const { unmount } = renderHook(() => usePauseRunOnUnmount());
     expect(useRunStore.getState().status).toBe('running');
     unmount();

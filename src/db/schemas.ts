@@ -10,7 +10,7 @@ export const profileSchema = z.object({
   theme: z.enum(['dark', 'light']),
   sounds: z.boolean(),
   defaultLanguage: languageSchema,
-  // profils legacy sans le champ : langue détectée du navigateur (défaut dynamique zod v3)
+  // legacy profiles without the field: language detected from the browser (dynamic zod v3 default)
   uiLanguage: z.enum(['fr', 'en']).default(() => detectUiLanguage()),
   focusTimeoutSec: z.number().min(1).max(60),
   createdAt: z.number(),
@@ -32,8 +32,8 @@ export const textOptionsSchema = z.object({
   accents: z.boolean(),
 });
 
-// miroir exact de RunRecord : toute ligne qui ne satisfait pas ce schéma est
-// considérée comme corrompue et écartée à la lecture (voir runsRepo.parseRuns)
+// exact mirror of RunRecord: any row that doesn't satisfy this schema is
+// considered corrupted and dropped on read (see runsRepo.parseRuns)
 export const runRecordSchema = z.object({
   id: z.number().int().min(1).optional(),
   date: z.number().int().positive(),
@@ -43,7 +43,7 @@ export const runRecordSchema = z.object({
   options: textOptionsSchema,
   durationMs: z.number().int().min(0),
   wpm: z.number().finite().min(0),
-  accuracy: z.number().finite().min(0).max(1), // fraction, pas un pourcentage
+  accuracy: z.number().finite().min(0).max(1), // fraction, not a percentage
   points: z.number().finite().min(0),
   errors: z.number().int().min(0),
   backspaces: z.number().int().min(0),

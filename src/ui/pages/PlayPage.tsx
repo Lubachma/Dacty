@@ -77,7 +77,7 @@ export function PlayPage() {
   }
 
   if (status === 'finished') {
-    return null; // résultat en cours de calcul
+    return null; // result still being computed
   }
 
   if (status === 'running' || status === 'paused' || status === 'invalidated') {

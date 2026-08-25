@@ -27,7 +27,7 @@ describe('computeStreak', () => {
 
   it('compte les jours consécutifs en remontant depuis aujourd\'hui', () => {
     expect(computeStreak([day(0), day(1), day(2), day(4)], Date.now())).toBe(3);
-    expect(computeStreak([day(1), day(2)], Date.now())).toBe(2); // streak active sans run aujourd'hui
+    expect(computeStreak([day(1), day(2)], Date.now())).toBe(2); // streak active without a run today
     expect(computeStreak([day(5)], Date.now())).toBe(0);
     expect(computeStreak([], Date.now())).toBe(0);
   });
@@ -47,7 +47,7 @@ describe('unlockNew', () => {
 
     const ctx2 = await buildContext(run({ wpm: 66 }));
     const second = await unlockNew(ctx2);
-    expect(second.map((a) => a.id)).not.toContain('wpm-60'); // déjà débloqué
+    expect(second.map((a) => a.id)).not.toContain('wpm-60'); // already unlocked
     expect(await db.achievements.count()).toBe(first.length);
   });
 });

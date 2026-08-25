@@ -1,25 +1,25 @@
 .PHONY: dev install build preview test validate
 
-# Lance le serveur de développement
+# Start the development server
 dev:
 	npm run dev
 
-# Installe les dépendances
+# Install dependencies
 install:
 	npm install
 
-# Build de production (avec validation du corpus et vérif TypeScript)
+# Production build (with corpus validation and TypeScript check)
 build:
 	npm run build
 
-# Sert le build de production en local
+# Serve the production build locally
 preview:
 	npm run preview
 
-# Lance les tests
+# Run the tests
 test:
 	npm run test
 
-# Valide le corpus de textes
+# Validate the text corpus
 validate:
 	npm run validate:corpus

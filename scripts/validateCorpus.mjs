@@ -44,7 +44,7 @@ for (const kind of KINDS) {
     if (free.filter((t) => t.quote).length !== kind.quotes) {
       errors.push(`${lang}: il faut exactement ${kind.quotes} citations (quote: true)`);
     }
-    // pickText(langue, longueur) lève une erreur si un bucket est vide
+    // pickText(language, length) throws if a bucket is empty
     for (const len of Object.keys(kind.ranges)) {
       if (!free.some((t) => t.length === len)) {
         errors.push(`${lang}: aucun texte libre en longueur ${len}`);
@@ -59,7 +59,7 @@ for (const kind of KINDS) {
       if (typeof t.official !== 'boolean') errors.push(`${t.id}: official doit être un booléen`);
       if (t.quote !== undefined && typeof t.quote !== 'boolean') errors.push(`${t.id}: quote doit être un booléen`);
       if (t.text !== t.text.normalize('NFC')) errors.push(`${t.id}: texte non normalisé NFC`);
-      // le moteur indexe par code unit UTF-16 : pas d'emoji ni de caractères astraux
+      // the engine indexes by UTF-16 code unit: no emoji or astral characters
       if (/[\u{10000}-\u{10FFFF}]/u.test(t.text)) errors.push(`${t.id}: caractère hors BMP interdit`);
       if (seenTexts.has(t.text)) errors.push(`${t.id}: texte dupliqué`);
       seenTexts.add(t.text);

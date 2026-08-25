@@ -78,7 +78,7 @@ export function ChallengerPage() {
       .then((p) => {
         if (active) setProgress(p);
       })
-      .catch(() => { /* IndexedDB indisponible : progression masquée */ });
+      .catch(() => { /* IndexedDB unavailable: progress hidden */ });
     return () => {
       active = false;
     };
@@ -107,7 +107,7 @@ export function ChallengerPage() {
   const play = (textId: string) => {
     const entry = getOfficialTexts(language).find((t) => t.id === textId);
     if (!entry) return;
-    // code toujours brut (applyOptions détruirait les sauts de ligne)
+    // code is always raw (applyOptions would destroy line breaks)
     const text = isCodeLanguage(language) ? entry.text : applyOptions(entry.text, ALL_OPTIONS_ON);
     start({ mode: 'challenger', language, textId, options: ALL_OPTIONS_ON }, text);
   };
@@ -126,7 +126,7 @@ export function ChallengerPage() {
   }
 
   if (status === 'finished') {
-    return null; // résultat en cours de calcul
+    return null; // result still being computed
   }
 
   if (status === 'running' || status === 'paused' || status === 'invalidated') {

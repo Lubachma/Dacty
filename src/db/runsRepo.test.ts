@@ -76,7 +76,7 @@ describe('runsRepo', () => {
 
   it('écarte les lignes corrompues à la lecture, avec avertissement', async () => {
     await saveRun(makeRun({}));
-    // IndexedDB est modifiable hors de l'app : insertion brute d'une ligne invalide
+    // IndexedDB can be edited outside the app: raw insertion of an invalid row
     await db.runs.add({ ...makeRun({ date: 3000 }), wpm: 'rapide' } as unknown as RunRecord);
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     expect((await allRuns()).map((r) => r.date)).toEqual([1000]);
@@ -86,7 +86,7 @@ describe('runsRepo', () => {
 
   it('topRuns et personalBests ignorent les lignes corrompues', async () => {
     await saveRun(makeRun({ wpm: 50 }));
-    // sans validation, cette ligne gagnerait le record de wpm
+    // without validation, this row would win the wpm record
     await db.runs.add({ ...makeRun({}), wpm: 999, accuracy: 'bof' } as unknown as RunRecord);
     vi.spyOn(console, 'warn').mockImplementation(() => {});
     expect((await topRuns({ mode: 'free', language: 'fr' })).map((r) => r.wpm)).toEqual([50]);

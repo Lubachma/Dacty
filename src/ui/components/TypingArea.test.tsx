@@ -26,7 +26,7 @@ describe('TypingArea', () => {
   beforeEach(() => setUiLanguage('fr'));
 
   it('affiche les caractères avec leurs statuts', () => {
-    const state = typeChar(createRun('ab'), 'x', 1000); // erreur sur 'a'
+    const state = typeChar(createRun('ab'), 'x', 1000); // error on 'a'
     render(<TypingArea state={state} onChar={() => {}} onBackspace={() => {}} />);
     const chars = screen.getByTestId('typing-area').querySelectorAll('[data-char]');
     expect(chars).toHaveLength(2);
@@ -49,7 +49,7 @@ describe('TypingArea', () => {
   it('bloque le collage', () => {
     render(<TypingArea state={createRun('ab')} onChar={() => {}} onBackspace={() => {}} />);
     const input = screen.getByLabelText('Zone de saisie');
-    // fireEvent retourne false quand preventDefault a été appelé
+    // fireEvent returns false when preventDefault has been called
     const notPrevented = fireEvent.paste(input, { clipboardData: { getData: () => 'ab' } });
     expect(notPrevented).toBe(false);
   });
@@ -149,8 +149,8 @@ describe('computeCaret', () => {
 
   it('utilise le premier fragment d\'un caractère fragmenté (saut de ligne)', () => {
     const container = fakeEl([{ left: 100, top: 50 }], 1, 1);
-    // span « ↵\n » : fragment du ↵ puis fragment vide sur la ligne suivante ;
-    // la boîte englobante (bounding rect) ferait deux lignes de haut
+    // the "↵\n" span: a fragment for the ↵ followed by an empty fragment on the next line;
+    // the bounding rect would otherwise be two lines tall
     const char = fakeEl([
       { left: 125, top: 75, right: 137, height: 32 },
       { left: 101, top: 107, right: 101, height: 32 },

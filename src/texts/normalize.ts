@@ -12,7 +12,7 @@ const collapse = (s: string): string => s.replace(/\s+/g, ' ').trim();
 export function applyOptions(raw: string, options: TextOptions): string {
   let out = raw;
   if (!options.accents) {
-    // NFD ne décompose pas les ligatures : œ/æ d'abord, puis les diacritiques
+    // NFD doesn't decompose ligatures: œ/æ first, then diacritics
     out = out
       .replace(/œ/g, 'oe')
       .replace(/Œ/g, 'Oe')
@@ -25,7 +25,7 @@ export function applyOptions(raw: string, options: TextOptions): string {
     out = out.replace(/\p{N}/gu, '');
   }
   if (!options.punctuation) {
-    // apostrophes et traits d'union soudent deux mots : on les remplace par un espace
+    // apostrophes and hyphens join two words: replace them with a space
     out = out.replace(/['’ʼ-]/g, ' ');
     out = out.replace(/[.,;:!?"«»‹›()–—…]/g, '');
   }

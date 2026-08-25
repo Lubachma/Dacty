@@ -21,7 +21,7 @@ const valid: RunRecord = {
 
 describe('runRecordSchema', () => {
   it('accepte une run complète et la retourne à l\'identique', () => {
-    // toEqual : échoue si le schéma oublie un champ de RunRecord (strip zod)
+    // toEqual: fails if the schema drops a RunRecord field (zod strip)
     expect(runRecordSchema.parse(valid)).toEqual(valid);
   });
 

@@ -1,7 +1,7 @@
 export type UiLanguage = 'fr' | 'en';
 export type Params = Record<string, string | number>;
 
-/** Texte porté par la donnée (succès) : la couche UI choisit la langue à l'affichage. */
+/** Text carried by the data (achievements): the UI layer picks the language to display. */
 export interface LocalizedText {
   fr: string;
   en: string;

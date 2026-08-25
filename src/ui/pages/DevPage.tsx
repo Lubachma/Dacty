@@ -46,7 +46,7 @@ export function DevPage() {
 
   const begin = () => {
     const entry = pickText(language, length);
-    // code brut : jamais applyOptions (détruirait les sauts de ligne)
+    // raw code: never applyOptions (would destroy line breaks)
     start({ mode: 'free', language, textId: entry.id, options: ALL_OPTIONS_ON }, entry.text);
   };
 
@@ -64,7 +64,7 @@ export function DevPage() {
   }
 
   if (status === 'finished') {
-    return null; // résultat en cours de calcul
+    return null; // result still being computed
   }
 
   if (status === 'running' || status === 'paused' || status === 'invalidated') {

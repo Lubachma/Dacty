@@ -84,7 +84,7 @@ export function AchievementsPage() {
           now: Date.now(),
         });
       } catch {
-        // IndexedDB indisponible : la page reste à 0 / N
+        // IndexedDB unavailable: the page stays at 0 / N
       }
     })();
   }, []);

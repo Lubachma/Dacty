@@ -8,7 +8,7 @@ import {
 
 const dayKey = (ts: number): string => new Date(ts).toDateString();
 
-/** Jours consécutifs de jeu, la série pouvant se terminer aujourd'hui ou hier. */
+/** Consecutive days played; the streak may end today or yesterday. */
 export function computeStreak(dates: number[], now: number): number {
   const days = new Set(dates.map(dayKey));
   const cursor = new Date(now);
@@ -36,7 +36,7 @@ export async function buildContext(newRun: RunRecord): Promise<AchievementContex
   };
 }
 
-/** Persiste et retourne uniquement les succès nouvellement débloqués. */
+/** Persists and returns only the newly unlocked achievements. */
 export async function unlockNew(ctx: AchievementContext): Promise<AchievementDef[]> {
   const already = new Set((await db.achievements.toArray()).map((a) => a.id));
   const fresh = ACHIEVEMENTS.filter((a) => !already.has(a.id) && a.isUnlocked(ctx));

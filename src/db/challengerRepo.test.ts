@@ -18,7 +18,7 @@ describe('challengerRepo', () => {
 
   it('garde le meilleur score par texte et calcule le total', async () => {
     await recordChallengerResult('fr', 'fr-101', 50, 1000, frOfficial);
-    const r = await recordChallengerResult('fr', 'fr-101', 40, 2000, frOfficial); // moins bien
+    const r = await recordChallengerResult('fr', 'fr-101', 40, 2000, frOfficial); // worse
     expect(r.progress.bestByText['fr-101']).toBe(50);
     const r2 = await recordChallengerResult('fr', 'fr-102', 60, 3000, frOfficial);
     expect(r2.progress.total).toBe(110);
@@ -30,7 +30,7 @@ describe('challengerRepo', () => {
     const r = await recordChallengerResult('fr', 'fr-102', 60, 3000, frOfficial); // total 110 -> bronze
     expect(r.tierUp).toBe('bronze');
     expect(r.progress.tierHistory).toEqual([{ tier: 'bronze', at: 3000 }]);
-    // re-run sans changement de tier
+    // re-run without a tier change
     const r2 = await recordChallengerResult('fr', 'fr-103', 80, 4000, frOfficial); // total 190
     expect(r2.tierUp).toBeNull();
     expect(r2.progress.tierHistory).toHaveLength(1);

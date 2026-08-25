@@ -3,12 +3,12 @@ import { useRunStore } from '@/state/runStore';
 import { useSettings } from '@/state/settingsStore';
 import { nowMs } from '@/engine/clock';
 
-/** Pause au blur de la fenêtre ; invalide la run si le focus ne revient pas sous `focusTimeoutSec`. */
+/** Pauses on window blur; invalidates the run if focus doesn't return within `focusTimeoutSec`. */
 export function useFocusGuard(): void {
   const status = useRunStore((s) => s.status);
   const timeoutSec = useSettings((s) => s.profile.focusTimeoutSec);
-  // Le timer vit dans une ref : l'effet se relance à chaque changement de statut
-  // (running → paused au blur) et ne doit pas annuler le timer en cours.
+  // The timer lives in a ref: the effect re-runs on every status change
+  // (running → paused on blur) and must not cancel the timer already in flight.
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -23,14 +23,14 @@ export function useFocusGuard(): void {
     const onFocus = () => {
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = null;
-      // les timers sont throttlés quand l'onglet est caché : le setTimeout
-      // d'invalidation peut ne pas avoir tourné. On tranche depuis l'horloge
-      // monotone du début de pause (même origine que pauseStartedAt).
+      // timers are throttled when the tab is hidden: the invalidation
+      // setTimeout may not have fired. We decide based on the monotonic
+      // clock from the start of the pause (same origin as pauseStartedAt).
       const pausedAt = useRunStore.getState().typing?.pauseStartedAt;
       if (pausedAt != null && nowMs() - pausedAt > timeoutSec * 1000) invalidate();
       else resume();
     };
-    // mobile : verrouillage/bascule d'app émet visibilitychange sans blur fiable
+    // mobile: lock/app-switch emits visibilitychange without a reliable blur
     const onVisibility = () => {
       if (document.visibilityState === 'hidden') onBlur();
       else onFocus();

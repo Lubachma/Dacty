@@ -4,7 +4,7 @@ import { useT } from '@/i18n';
 
 interface Props {
   children: ReactNode;
-  /** changer cette valeur réinitialise le boundary (ex : pathname de la route) */
+  /** changing this value resets the boundary (e.g. route pathname) */
   resetKey: string;
 }
 
@@ -37,7 +37,7 @@ function ErrorFallback({ onRetry }: { onRetry: () => void }) {
   );
 }
 
-/** Confine une erreur de rendu à la page : header et navigation restent utilisables. */
+/** Confines a render error to the page: header and navigation stay usable. */
 export class ErrorBoundary extends Component<Props, State> {
   state: State = { hasError: false };
 

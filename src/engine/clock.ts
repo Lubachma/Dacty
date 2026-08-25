@@ -1,8 +1,8 @@
 /**
- * Horloge monotone (performance.now) pour la mesure des durées de run : frappes, pauses,
- * chrono du HUD, garde de focus. Insensible aux sauts de l'horloge système (NTP, réglage
- * manuel) et précise à la sub-milliseconde.
- * Ne JAMAIS mélanger avec Date.now() (origines différentes) : les dates murales
- * (run.date, streaks, succès, profil) restent sur Date.now().
+ * Monotonic clock (performance.now) for measuring run durations: keystrokes, pauses,
+ * HUD timer, focus guard. Immune to system clock jumps (NTP, manual adjustment) and
+ * accurate to sub-millisecond precision.
+ * NEVER mix with Date.now() (different origins): wall-clock dates (run.date, streaks,
+ * achievements, profile) stay on Date.now().
  */
 export const nowMs = (): number => performance.now();

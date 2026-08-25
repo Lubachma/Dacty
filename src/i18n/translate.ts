@@ -4,7 +4,7 @@ import type { Params, UiLanguage } from './types';
 
 const DICTS: Record<UiLanguage, Record<TranslationKey, string>> = { fr, en };
 
-/** Traduction pure + interpolation `{token}` ; token non fourni = laissé tel quel. */
+/** Pure translation + `{token}` interpolation; a missing token is left as-is. */
 export function translate(lang: UiLanguage, key: TranslationKey, params?: Params): string {
   const template: string = DICTS[lang][key];
   if (!params) return template;

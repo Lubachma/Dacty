@@ -19,7 +19,7 @@ describe('useFocusGuard', () => {
   it('met en pause au blur, reprend au focus, invalide après le délai', () => {
     vi.useFakeTimers();
     useRunStore.getState().start(config, 'ab');
-    useRunStore.getState().key('a'); // démarre le chrono
+    useRunStore.getState().key('a'); // starts the clock
     renderHook(() => useFocusGuard());
 
     act(() => { window.dispatchEvent(new Event('blur')); });
@@ -43,8 +43,8 @@ describe('useFocusGuard', () => {
     act(() => { window.dispatchEvent(new Event('blur')); });
     expect(useRunStore.getState().status).toBe('paused');
 
-    // onglet caché : le setTimeout d'invalidation n'a pas tourné (throttlé),
-    // mais l'horloge monotone a avancé au-delà du délai
+    // hidden tab: the invalidation setTimeout hasn't fired (throttled),
+    // but the monotonic clock has advanced past the deadline
     const shifted = performance.now() + 10_000;
     const clock = vi.spyOn(performance, 'now').mockReturnValue(shifted);
     act(() => { window.dispatchEvent(new Event('focus')); });

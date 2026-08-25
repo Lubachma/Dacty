@@ -18,7 +18,7 @@ describe('AchievementsPage', () => {
     expect(await screen.findByText('1 / 28')).toBeInTheDocument();
     expect(screen.getByText('Échauffement')).toBeInTheDocument();
     expect(screen.getByText('Inhumain')).toBeInTheDocument();
-    // « Challenger » apparaît deux fois : titre de section et succès « Challenger »
+    // "Challenger" appears twice: section title and the "Challenger" achievement
     expect(screen.getAllByText('Challenger').length).toBeGreaterThan(0);
   });
 
@@ -37,7 +37,7 @@ describe('AchievementsPage', () => {
       backspaces: 0, chars: 200, noBackspace: true,
     });
     render(<MemoryRouter><AchievementsPage /></MemoryRouter>);
-    // sharpshooter-10 (1 run ≥ 98%) et runs-10 (1 run) affichent tous deux « 1 / 10 »
+    // sharpshooter-10 (1 run ≥ 98%) and runs-10 (1 run) both show "1 / 10"
     expect((await screen.findAllByText('1 / 10')).length).toBeGreaterThan(0);
   });
 });

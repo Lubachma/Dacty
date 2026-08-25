@@ -18,7 +18,7 @@ function load(language: Language, raw: { texts: RawEntry[] }): TextEntry[] {
 }
 
 export const CORPUS: TextEntry[] = [
-  // les imports JSON sont typés `string` partout : on caste après validation au build
+  // JSON imports are typed `string` everywhere: we cast after validation at build time
   ...load('fr', frData as unknown as { texts: RawEntry[] }),
   ...load('en', enData as unknown as { texts: RawEntry[] }),
   ...load('c', cData as unknown as { texts: RawEntry[] }),

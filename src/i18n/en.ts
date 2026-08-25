@@ -1,6 +1,6 @@
 import type { TranslationKey } from './fr';
 
-// Le typage Record<TranslationKey, string> garantit la complétude à la compilation.
+// The Record<TranslationKey, string> typing guarantees completeness at compile time.
 export const en: Record<TranslationKey, string> = {
   'common.loading': 'Loading…',
   'common.unranked': 'Unranked',

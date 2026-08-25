@@ -47,7 +47,7 @@ export function LeaderboardPage() {
           setMyRank(null);
         }
       } catch {
-        // IndexedDB indisponible : listes vides déjà gérées
+        // IndexedDB unavailable: empty lists already handled
       }
     })();
     return () => {

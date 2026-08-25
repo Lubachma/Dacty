@@ -10,7 +10,7 @@ import { translate } from '@/i18n/translate';
 import { useSettings } from './settingsStore';
 import { useToasts } from './toastStore';
 
-// incrémenté à chaque start/reset : invalide les completeRun encore en vol
+// incremented on every start/reset: invalidates any completeRun still in flight
 let runGeneration = 0;
 
 export type RunStatus = 'idle' | 'running' | 'paused' | 'finished' | 'invalidated';
@@ -45,8 +45,8 @@ export const useRunStore = create<RunStore>((set, get) => ({
     if (!typing || !config || status !== 'running') return;
     let next = typeChar(typing, char, nowMs());
     if (next === typing) return;
-    // auto-indentation : après un saut de ligne correct, tape les espaces attendus
-    // (frappes synthétiques : ne comptent ni dans les frappes ni dans la timeline)
+    // auto-indentation: after a correct newline, types the expected spaces
+    // (synthetic keystrokes: count toward neither keystrokes nor the timeline)
     if (char === '\n' && next.statuses[next.cursor - 1] === 'correct') {
       while (next.text[next.cursor] === ' ' && !isFinished(next)) {
         next = typeChar(next, ' ', nowMs(), true);
@@ -54,7 +54,7 @@ export const useRunStore = create<RunStore>((set, get) => ({
     }
     if (isFinished(next)) {
       set({ typing: next, status: 'finished' });
-      // un start/reset pendant completeRun rend ce résultat obsolète : on l'ignore
+      // a start/reset during completeRun makes this result stale: ignore it
       const generation = runGeneration;
       void completeRun(next, config, Date.now())
         .then((result) => {
@@ -63,7 +63,7 @@ export const useRunStore = create<RunStore>((set, get) => ({
         })
         .catch(() => {
           if (runGeneration !== generation) return;
-          // IndexedDB indisponible (navigation privée) : résultats affichés, rien n'est persisté
+          // IndexedDB unavailable (private browsing): results are shown, nothing is persisted
           const now = Date.now();
           set({
             result: {

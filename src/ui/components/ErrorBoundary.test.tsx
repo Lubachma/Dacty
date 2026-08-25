@@ -20,7 +20,7 @@ describe('ErrorBoundary', () => {
   });
 
   it('confine l\'erreur : fallback actionnable, reste de la page intact', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => {}); // React logue l'erreur
+    vi.spyOn(console, 'error').mockImplementation(() => {}); // React logs the error
     render(
       <MemoryRouter>
         <header>en-tête</header>

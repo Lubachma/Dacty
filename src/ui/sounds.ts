@@ -20,7 +20,7 @@ function beep(freq: number, durationMs: number, type: OscillatorType, gainValue:
     osc.start();
     osc.stop(ctx.currentTime + durationMs / 1000);
   } catch {
-    // audio indisponible : silencieux
+    // audio unavailable: stay silent
   }
 }
 

@@ -47,7 +47,7 @@ describe('runStore', () => {
     useRunStore.getState().start(config, 'a\n    b');
     useRunStore.getState().key('a');
     useRunStore.getState().key('\n');
-    // le curseur a sauté les 4 espaces d'indentation automatiquement
+    // the cursor auto-skipped the 4 indentation spaces
     expect(useRunStore.getState().typing?.cursor).toBe(6);
     expect(useRunStore.getState().typing?.statuses.slice(0, 6)).toEqual(
       ['correct', 'correct', 'correct', 'correct', 'correct', 'correct'],
@@ -56,7 +56,7 @@ describe('runStore', () => {
 
   it("n'auto-indente pas après un saut de ligne incorrect", () => {
     useRunStore.getState().start(config, 'ab\n  c');
-    useRunStore.getState().key('\n'); // attendu: 'a' -> erreur, pas d'indentation
+    useRunStore.getState().key('\n'); // expected: 'a' -> error, no indentation
     const typing = useRunStore.getState().typing;
     expect(typing?.statuses[0]).toBe('incorrect');
     expect(typing?.cursor).toBe(1);
@@ -68,7 +68,7 @@ describe('runStore', () => {
     useRunStore.getState().key('a');
     useRunStore.getState().key('\n');
     const typing = useRunStore.getState().typing;
-    // seules les vraies frappes ('a' et '\n') comptent pour la précision et la timeline
+    // only real keystrokes ('a' and '\n') count toward accuracy and the timeline
     expect(typing?.keystrokes).toBe(2);
     expect(typing?.events).toHaveLength(2);
   });

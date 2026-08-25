@@ -4,11 +4,11 @@ import type { GameMode, RunRecord } from './types';
 import type { Language } from '@/texts/types';
 
 export async function saveRun(run: RunRecord): Promise<number> {
-  // l'id auto-incrémenté est toujours un number à l'exécution
+  // the auto-incremented id is always a number at runtime
   return db.runs.add(run) as Promise<number>;
 }
 
-/** Écarte les lignes corrompues (IndexedDB modifiable hors de l'app) plutôt que de planter. */
+/** Drops corrupted rows (IndexedDB can be edited outside the app) instead of crashing. */
 function parseRuns(rows: unknown[]): RunRecord[] {
   const valid: RunRecord[] = [];
   let dropped = 0;
@@ -21,7 +21,7 @@ function parseRuns(rows: unknown[]): RunRecord[] {
   return valid;
 }
 
-/** Prédicat de validation pour les filtres de requêtes d'index (curseur paresseux). */
+/** Validation predicate for index query filters (lazy cursor). */
 function isValidRun(r: RunRecord): boolean {
   return runRecordSchema.safeParse(r).success;
 }
@@ -73,8 +73,8 @@ export async function personalBests(): Promise<{
   bestAccuracy: RunRecord | null;
   longestRun: RunRecord | null;
 }> {
-  // requêtes d'index paresseuses : le curseur s'arrête au premier match valide,
-  // sans charger la table (les lignes corrompues sont écartées par le filtre)
+  // lazy index queries: the cursor stops at the first valid match,
+  // without loading the table (corrupted rows are dropped by the filter)
   const bestWpm = (await db.runs.orderBy('wpm').reverse().filter(isValidRun).first()) ?? null;
   const bestAccuracy =
     (await db.runs

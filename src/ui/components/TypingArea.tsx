@@ -16,11 +16,11 @@ export interface CaretRect {
   h: number;
 }
 
-// Position du curseur mesurée depuis la padding box du conteneur : c'est
-// l'origine d'un enfant positionné avec left-0/top-0 (la bordure est exclue).
-// On prend le premier fragment du caractère ciblé : les spans « ↵\n » en
-// génèrent un deuxième, vide, sur la ligne suivante — la boîte englobante
-// ferait deux lignes de haut.
+// Cursor position measured from the container's padding box: that's the
+// origin for a child positioned with left-0/top-0 (the border is excluded).
+// We use the first fragment of the target character: "↵\n" spans produce a
+// second, empty one on the next line — the bounding rect would otherwise be
+// two lines tall.
 export function computeCaret(
   container: HTMLElement,
   chars: ArrayLike<HTMLElement>,
@@ -58,7 +58,7 @@ export function TypingArea({ state, disabled = false, onChar, onBackspace }: Typ
       if (next) setCaret(next);
     };
     update();
-    // le texte peut se ré-agencer sans frappe (redimensionnement, fontes) : on recalcule
+    // the text can reflow without typing (resize, font load): we recompute
     if (typeof ResizeObserver === 'undefined') return;
     const ro = new ResizeObserver(update);
     ro.observe(container);
@@ -85,7 +85,7 @@ export function TypingArea({ state, disabled = false, onChar, onBackspace }: Typ
         autoComplete="off"
         spellCheck={false}
         onChange={(e) => {
-          // caractères composés (touches mortes, IME) : non vus par onKeyDown
+          // composed characters (dead keys, IME): not seen by onKeyDown
           const v = e.target.value;
           e.target.value = '';
           if (disabled || v.length === 0) return;
@@ -94,7 +94,7 @@ export function TypingArea({ state, disabled = false, onChar, onBackspace }: Typ
         onKeyDown={(e) => {
           if (disabled) return;
           if (e.key === 'Tab') {
-            // garder le focus dans la zone de saisie pendant la run
+            // keep focus in the typing area during the run
             e.preventDefault();
             return;
           }

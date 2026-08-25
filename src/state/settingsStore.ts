@@ -26,7 +26,7 @@ export const useSettings = create<SettingsStore>((set, get) => ({
     try {
       profile = await getProfile();
     } catch {
-      // IndexedDB indisponible : session en mémoire avec le profil par défaut
+      // IndexedDB unavailable: in-memory session with the default profile
     }
     applyTheme(profile.theme);
     applyUiLanguage(profile.uiLanguage);
@@ -34,7 +34,7 @@ export const useSettings = create<SettingsStore>((set, get) => ({
     set({ profile, loaded: true });
   },
   async update(patch) {
-    // application locale immédiate (feedback instantané), persistance ensuite
+    // apply locally right away (instant feedback), persist afterward
     set({ profile: { ...get().profile, ...patch } });
     if (patch.theme) applyTheme(patch.theme);
     if (patch.uiLanguage) applyUiLanguage(patch.uiLanguage);
@@ -42,7 +42,7 @@ export const useSettings = create<SettingsStore>((set, get) => ({
     try {
       await updateProfile(patch);
     } catch {
-      // persistance indisponible : le réglage ne vaut que pour la session
+      // persistence unavailable: the setting only applies for this session
     }
   },
 }));
