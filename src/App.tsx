@@ -4,7 +4,7 @@ import { Layout } from '@/ui/components/Layout';
 import { HomePage } from '@/ui/pages/HomePage';
 import { useSettings } from '@/state/settingsStore';
 
-// pages secondaires en imports dynamiques : hors du chunk initial
+// secondary pages as dynamic imports: kept out of the initial chunk
 const PlayPage = lazy(() => import('@/ui/pages/PlayPage').then((m) => ({ default: m.PlayPage })));
 const DevPage = lazy(() => import('@/ui/pages/DevPage').then((m) => ({ default: m.DevPage })));
 const ChallengerPage = lazy(() =>
@@ -28,7 +28,7 @@ export default function App() {
   }, [load]);
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '') || '/'}>
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
